@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#050302">
+<title>KOWLOON WALLED CITY · GDR</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+HK:wght@300;700&family=Oswald:wght@700&display=swap');
+
+:root {
+  --red:#c0392b; --amber:#e67e22; --gold:#f39c12;
+  --dark:#050302; --mid:#171008; --text:#c8b89a;
+  --dim:#6b5a40; --bright:#f5e6cc; --green:#27ae60;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body {
+  background:var(--dark); color:var(--text);
+  font-family:'Share Tech Mono',monospace;
+  min-height:100vh; overflow-x:hidden;
+}
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.055) 2px,rgba(0,0,0,0.055) 4px);
+}
+
+.wrap { max-width:900px; margin:0 auto; padding:14px 11px 80px; }
+
+/* HEADER */
+.header { text-align:center; padding:22px 0 16px; border-bottom:1px solid #2a1a08; margin-bottom:12px; }
+.hcn { font-family:'Noto Sans HK',sans-serif; font-size:11px; color:var(--red); letter-spacing:6px; margin-bottom:4px; opacity:.85; }
+.htitle { font-family:'Oswald',sans-serif; font-size:clamp(22px,6.5vw,46px); font-weight:700; color:var(--bright); letter-spacing:4px; text-shadow:0 0 40px rgba(192,57,43,.5); }
+.hsub { font-size:8px; color:var(--dim); letter-spacing:3px; margin-top:5px; }
+
+/* TIME */
+.timebar { background:var(--mid); border:1px solid #2a1a08; padding:9px 14px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
+.tlabel { font-size:8px; color:var(--dim); letter-spacing:2px; }
+.tvalue { font-family:'Oswald',sans-serif; font-size:17px; color:var(--amber); letter-spacing:2px; }
+
+/* EVENT BANNER */
+.evbanner { background:#180606; border:1px solid var(--red); border-left:3px solid var(--red); padding:9px 13px; margin-bottom:10px; display:none; animation:fIn .35s ease; }
+.evbanner.on { display:block; }
+.evtitle { font-size:8px; letter-spacing:2px; color:var(--red); margin-bottom:3px; }
+.evtext { font-size:11px; color:var(--bright); line-height:1.65; }
+@keyframes fIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+
+/* TABS */
+.tabs { display:flex; gap:3px; margin-bottom:10px; }
+.tb { flex:1; background:var(--mid); border:1px solid #2a1a08; color:var(--dim); font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:1px; padding:8px 3px; cursor:pointer; transition:all .15s; }
+.tb.on { border-color:var(--red); color:var(--bright); background:#1c1109; }
+
+.panel { display:none; }
+.panel.on { display:block; }
+
+/* ── NARRATIVE BOX – tall enough to read ── */
+.narr-box {
+  background:#0b0703;
+  border:1px solid #2a1a08;
+  border-left:3px solid var(--red);
+  padding:18px 18px 18px 16px;
+  margin-bottom:12px;
+  position:relative;
+  min-height:min(320px, 42vh);
+}
+.narr-tag { position:absolute; top:-1px; left:13px; background:var(--red); color:#fff; font-size:7px; letter-spacing:2px; padding:2px 8px; }
+/* scrollable if very long */
+.narr-scroll {
+  margin-top:7px;
+  max-height:min(500px, 55vh);
+  overflow-y:auto;
+  scrollbar-width:thin;
+  scrollbar-color:var(--red) transparent;
+  padding-right:4px;
+}
+.narr-text { font-size:14px; line-height:2.05; color:var(--bright); white-space:pre-wrap; }
+.narr-text .hl  { color:var(--gold); }
+.narr-text .hlr { color:var(--red);  }
+
+/* CHOICES */
+.slabel { font-size:8px; color:var(--dim); letter-spacing:3px; margin-bottom:7px; }
+.cgrid  { display:grid; gap:5px; margin-bottom:12px; }
+.cbtn {
+  background:var(--mid); border:1px solid #3a2010; color:var(--text);
+  padding:12px 13px; text-align:left;
+  font-family:'Share Tech Mono',monospace; font-size:12px;
+  cursor:pointer; transition:all .15s;
+  display:flex; align-items:flex-start; gap:9px;
+  position:relative; overflow:hidden; width:100%;
+}
+.cbtn::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,rgba(192,57,43,.1),transparent); opacity:0; transition:opacity .2s; }
+.cbtn:hover { border-color:var(--red); color:var(--bright); }
+.cbtn:hover::after { opacity:1; }
+.cbtn:disabled { opacity:.35; cursor:not-allowed; }
+.cnum { color:var(--red); font-size:9px; min-width:16px; margin-top:1px; }
+.ctxt { flex:1; line-height:1.55; }
+.crisk { font-size:7px; margin-top:3px; }
+.r-alto  { color:var(--red); }
+.r-medio { color:var(--amber); }
+.r-basso { color:var(--green); }
+
+/* CUSTOM INPUT */
+.custwrap { display:flex; gap:5px; margin-bottom:12px; }
+.custinp {
+  flex:1; background:var(--mid); border:1px solid #3a2010;
+  color:var(--bright); font-family:'Share Tech Mono',monospace;
+  font-size:12px; padding:10px 12px; outline:none;
+  transition:border-color .2s;
+}
+.custinp:focus { border-color:var(--amber); }
+.custinp::placeholder { color:var(--dim); }
+.sndbtn {
+  background:var(--red); border:none; color:#fff;
+  font-family:'Oswald',sans-serif; font-size:11px;
+  letter-spacing:2px; padding:10px 15px; cursor:pointer;
+  transition:background .15s; white-space:nowrap;
+}
+.sndbtn:hover { background:#a93226; }
+.sndbtn:disabled { background:#3a2010; color:var(--dim); cursor:not-allowed; }
+
+/* LOADING */
+.loading { display:none; text-align:center; padding:22px; color:var(--dim); }
+.loading.on { display:block; }
+.dot { display:inline-block; animation:blink 1s infinite; }
+.dot:nth-child(2){animation-delay:.3s} .dot:nth-child(3){animation-delay:.6s}
+@keyframes blink{0%,100%{opacity:.15}50%{opacity:1}}
+
+/* LOG */
+.logbox { max-height:90px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--red) transparent; }
+.logline { font-size:9px; color:var(--dim); padding:3px 0; border-bottom:1px solid #130c04; line-height:1.5; }
+
+hr { border:none; border-top:1px solid #1a1008; margin:10px 0; }
+
+/* ── STATS tab ── */
+.sgrid { display:grid; grid-template-columns:repeat(2,1fr); gap:5px; margin-bottom:7px; }
+@media(min-width:480px){.sgrid{grid-template-columns:repeat(4,1fr);}}
+.sbox { background:var(--mid); border:1px solid #2a1a08; padding:7px 10px; position:relative; }
+.sbox::before { content:''; position:absolute; top:0;left:0;right:0;height:2px;background:var(--red);opacity:.4; }
+.slb { font-size:7px; color:var(--dim); letter-spacing:2px; margin-bottom:2px; }
+.sval { font-size:15px; color:var(--gold); }
+.sval.danger{color:var(--red)} .sval.ok{color:var(--green)}
+.bar { height:3px; background:#2a1a08; margin-top:4px; border-radius:2px; overflow:hidden; }
+.bf  { height:100%; border-radius:2px; transition:width .45s; }
+.bh  { background:linear-gradient(90deg,var(--red),var(--green)); }
+.br  { background:linear-gradient(90deg,var(--dim),var(--gold)); }
+
+/* SKILLS */
+.sklist { display:grid; gap:5px; margin-bottom:8px; }
+.skitem { background:var(--mid); border:1px solid #2a1a08; padding:7px 11px; display:flex; justify-content:space-between; align-items:center; }
+.sknm { font-size:10px; color:var(--bright); }
+.sklv { display:flex; gap:3px; }
+.skd  { width:7px; height:7px; border-radius:50%; background:#2a1a08; }
+.skd.f{ background:var(--gold); }
+
+/* INVENTORY */
+.invg { display:grid; grid-template-columns:repeat(2,1fr); gap:5px; margin-bottom:8px; }
+@media(min-width:400px){.invg{grid-template-columns:repeat(3,1fr);}}
+.invitem { background:var(--mid); border:1px solid #2a1a08; padding:7px 9px; font-size:10px; color:var(--text); display:flex; align-items:center; gap:6px; }
+.invico  { font-size:13px; }
+
+/* RELATIONS */
+.rllist { display:grid; gap:5px; margin-bottom:8px; }
+.rlitem { background:var(--mid); border:1px solid #2a1a08; padding:9px 11px; }
+.rlhd   { display:flex; justify-content:space-between; align-items:center; margin-bottom:3px; }
+.rlnm   { font-size:11px; color:var(--bright); }
+.rlst   { font-size:8px; letter-spacing:1px; padding:2px 6px; }
+.rlst.amico   { background:#1a3a1a; color:var(--green); }
+.rlst.neutro  { background:#2a2010; color:var(--amber); }
+.rlst.nemico  { background:#3a1010; color:var(--red); }
+.rlst.alleato { background:#102030; color:#5dade2; }
+.rldsc  { font-size:9px; color:var(--dim); line-height:1.55; }
+
+.empty { color:var(--dim); font-size:10px; font-style:italic; padding:6px 0; }
+
+/* INTRO */
+#intro { text-align:center; padding:30px 14px; }
+.itxt { font-size:12px; line-height:2.1; color:var(--text); max-width:480px; margin:14px auto 26px; }
+.strt { background:transparent; border:2px solid var(--red); color:var(--red); font-family:'Oswald',sans-serif; font-size:15px; letter-spacing:4px; padding:13px 40px; cursor:pointer; transition:all .2s; }
+.strt:hover { background:var(--red); color:#fff; box-shadow:0 0 28px rgba(192,57,43,.4); }
+</style>
+</head>
+<body>
+
+    <div style="font-size:9px;color:#5a4a30;letter-spacing:2px;margin-bottom:18px;">RICHIESTA UNA SOLA VOLTA</div>
+    <p style="font-size:11px;color:#c8b89a;line-height:1.9;margin-bottom:18px;">
+      Per giocare da Chrome serve la tua API key Anthropic.<br>
+      Viene salvata solo nel tuo browser, non trasmessa altrove.<br><br>
+      Ottienila gratis su:<br>
+      <strong style="color:#e67e22;">console.anthropic.com → API Keys</strong><br>
+      <span style="font-size:9px;color:#5a4a30;">(Nuovi account hanno $5 di credito gratuito)</span>
+    </p>
+    <input id="key-inp" type="password" placeholder="sk-ant-api03-..."
+      style="width:100%;background:#171008;border:1px solid #3a2010;color:#f5e6cc;font-family:'Share Tech Mono',monospace;font-size:12px;padding:11px 13px;outline:none;margin-bottom:8px;box-sizing:border-box;">
+    <div id="key-err" style="font-size:10px;color:#c0392b;margin-bottom:10px;display:none;">Chiave non valida.</div>
+    <button onclick="saveKey()" style="width:100%;background:#c0392b;border:none;color:#fff;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:3px;padding:13px;cursor:pointer;">
+      CONFERMA E GIOCA
+    </button>
+    <p style="font-size:9px;color:#2a1a08;margin-top:14px;line-height:1.6;color:#3a2a15;">
+      La chiave viene salvata in localStorage su questo dispositivo.<br>
+      Puoi cambiarla in qualsiasi momento dal tab Inventario.
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="header">
+  <div class="hcn">九龍寨城 · 生存模擬</div>
+  <div class="htitle">KOWLOON WALLED CITY</div>
+  <div class="hsub">SIMULAZIONE DI SOPRAVVIVENZA · HONG KONG 1979</div>
+</div>
+
+<!-- INTRO -->
+<div id="intro">
+  <p class="itxt">
+    Sei <strong style="color:var(--gold)">Mirko</strong>, 11 anni.<br>
+    Nato nel 1968 nella Kowloon Walled City —<br>
+    50.000 anime in 0,026 km².<br>
+    Nessuna polizia entra qui. Solo Triadi, fabbriche<br>
+    illegali, corridoi bui e la tua volontà di sopravvivere.<br><br>
+    Ogni round = 6 mesi. Ogni scelta conta.<br>
+    <span style="color:var(--red)">Sopravvivi. Cresci. Esci.</span>
+  </p>
+  <button class="strt" onclick="startGame()">▶ NUOVA PARTITA</button>
+
+  <div id="save-section" style="display:none;margin-top:20px;background:var(--mid);border:1px solid #2a1a08;border-top:2px solid var(--red);padding:16px;">
+    <div style="font-size:8px;color:var(--dim);letter-spacing:3px;margin-bottom:8px;">▸ SALVATAGGIO TROVATO</div>
+    <div id="save-preview" style="font-size:11px;color:var(--text);line-height:1.9;margin-bottom:12px;"></div>
+    <button onclick="loadSave()" style="width:100%;background:var(--red);border:none;color:#fff;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:3px;padding:11px;cursor:pointer;">⟳ CONTINUA PARTITA</button>
+  </div>
+
+  <div style="margin-top:16px;text-align:center;">
+    <label style="border:1px solid var(--dim);color:var(--dim);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;padding:8px 16px;cursor:pointer;display:inline-block;">
+      ⬆ IMPORTA SALVATAGGIO<input type="file" accept=".json" style="display:none" onchange="importSave(event)">
+    </label>
+  </div>
+
+  <div id="save-section" style="display:none; margin-top:24px;">
+    <div style="font-size:9px;color:var(--dim);letter-spacing:3px;margin-bottom:10px;">▸ SALVATAGGIO TROVATO</div>
+    <button class="strt" style="font-size:13px;padding:11px 30px;margin-bottom:6px;" onclick="loadSave()">⟳ CONTINUA PARTITA</button>
+    <div id="save-preview" style="font-size:10px;color:var(--dim);margin-top:6px;line-height:1.8;"></div>
+  </div>
+
+  <div style="margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+    <label style="background:transparent;border:1px solid var(--dim);color:var(--dim);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;padding:9px 16px;cursor:pointer;display:inline-block;">
+      ⬆ IMPORTA SALVATAGGIO
+      <input type="file" accept=".json" style="display:none" onchange="importSave(event)">
+    </label>
+    <button onclick="resetKey()" style="background:transparent;border:1px solid var(--dim);color:var(--dim);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;padding:9px 16px;cursor:pointer;">🔑 CAMBIA API KEY</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="game" style="display:none">
+
+  <div class="timebar">
+    <div><div class="tlabel">ANNO · SEMESTRE</div><div class="tvalue" id="tdisp">1979 · Gen-Giu</div></div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="text-align:right"><div class="tlabel">ETÀ · ROUND</div><div class="tvalue" id="adisp">11 anni · R1</div></div>
+      <button onclick="exportSave()" title="Salva partita" style="background:var(--red);border:none;color:#fff;font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:1px;padding:6px 10px;cursor:pointer;white-space:nowrap;">💾 SALVA</button>
+    </div>
+  </div>
+
+  <div class="evbanner" id="evbanner">
+    <div class="evtitle">⚠ EVENTO DINAMICO</div>
+    <div class="evtext" id="evtext"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tb on"  onclick="tab('gioco')">▶ GIOCO</button>
+    <button class="tb"     onclick="tab('stats')">◈ STATS</button>
+    <button class="tb"     onclick="tab('inv')">⊞ INVENTARIO</button>
+    <button class="tb"     onclick="tab('rel')">◉ RELAZIONI</button>
+  </div>
+
+  <!-- ── TAB GIOCO ── -->
+  <div class="panel on" id="p-gioco">
+    <div class="narr-box">
+      <div class="narr-tag">SITUAZIONE</div>
+      <div class="narr-scroll">
+        <div class="narr-text" id="narr">Caricamento...</div>
+      </div>
+    </div>
+    <div id="csec">
+      <div class="slabel">▸ SCEGLI UN'AZIONE</div>
+      <div class="cgrid" id="cgrid"></div>
+    </div>
+    <div class="slabel">▸ AZIONE PERSONALIZZATA</div>
+    <div class="custwrap">
+      <input class="custinp" id="custinp" type="text"
+             placeholder="Cosa fa Mirko..." maxlength="200"
+             onkeydown="if(event.key==='Enter')sendCustom()">
+      <button class="sndbtn" id="sndbtn" onclick="sendCustom()">INVIA</button>
+    </div>
+    <div class="loading" id="loading">
+      <span class="dot">●</span><span class="dot">●</span><span class="dot">●</span><br><br>
+      <span style="font-size:9px;letter-spacing:2px">LA CITTÀ DECIDE...</span>
+    </div>
+    <hr>
+    <div class="slabel">▸ DIARIO</div>
+    <div class="logbox" id="logbox"></div>
+  </div>
+
+  <!-- ── TAB STATS ── -->
+  <div class="panel" id="p-stats">
+    <div class="sgrid">
+      <div class="sbox"><div class="slb">SALUTE</div><div class="sval" id="sh">7/10</div><div class="bar"><div class="bf bh" id="bh" style="width:70%"></div></div></div>
+      <div class="sbox"><div class="slb">DENARO HK$</div><div class="sval" id="sm">12</div></div>
+      <div class="sbox"><div class="slb">REPUTAZIONE</div><div class="sval" id="sr">—</div><div class="bar"><div class="bf br" id="br" style="width:10%"></div></div></div>
+      <div class="sbox"><div class="slb">ISTRUZIONE</div><div class="sval" id="se">0/10</div></div>
+    </div>
+    <div class="sgrid">
+      <div class="sbox"><div class="slb">FORZA</div><div class="sval" id="sst">3/10</div></div>
+      <div class="sbox"><div class="slb">ASTUZIA</div><div class="sval" id="sw">5/10</div></div>
+      <div class="sbox"><div class="slb">FORTUNA</div><div class="sval" id="sl">5/10</div></div>
+      <div class="sbox"><div class="slb">CRIMINALITÀ</div><div class="sval" id="sc" style="color:var(--red)">0/10</div></div>
+    </div>
+    <br>
+    <div class="slabel">▸ ABILITÀ APPRESE</div>
+    <div class="sklist" id="sklist"><div class="empty">Nessuna abilità ancora.</div></div>
+  </div>
+
+  <!-- ── TAB INVENTARIO ── -->
+  <div class="panel" id="p-inv">
+    <div class="slabel">▸ OGGETTI POSSEDUTI</div>
+    <div class="invg" id="invg"><div class="empty">Nessun oggetto.</div></div>
+    <hr>
+    <div class="slabel">▸ FLAGS / EVENTI CHIAVE</div>
+    <div id="flaglist" style="font-size:9px;color:var(--dim);line-height:2.1">—</div>
+    <hr>
+    <div class="slabel">▸ SALVATAGGIO PARTITA</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+      <button onclick="exportSave()" style="background:transparent;border:1px solid var(--red);color:var(--red);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;padding:8px 14px;cursor:pointer;">💾 ESPORTA JSON</button>
+      <label style="background:transparent;border:1px solid var(--dim);color:var(--dim);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;padding:8px 14px;cursor:pointer;display:inline-block;">
+        ⬆ IMPORTA JSON<input type="file" accept=".json" style="display:none" onchange="importSave(event)">
+      </label>
+    </div>
+  </div>
+
+  <!-- ── TAB RELAZIONI ── -->
+  <div class="panel" id="p-rel">
+    <div class="slabel">▸ PERSONAGGI CONOSCIUTI</div>
+    <div class="rllist" id="rllist"><div class="empty">Nessun contatto ancora.</div></div>
+  </div>
+
+</div><!-- /game -->
+</div><!-- /wrap -->
+
+<script>
+/* ═══════════════════════════════
+   STATE
+═══════════════════════════════ */
+const G = {
+  round:1, year:1979, sem:1, age:11,
+  health:7, money:12, rep:0, repLbl:'—',
+  edu:0, str:3, wit:5, luck:5, crim:0,
+  inv:[], skills:[], rel:{}, flags:[]
+};
+
+let conv = [];   // conversation history for the API
+let busy = false;
+
+/* ═══════════════════════════════
+   SYSTEM PROMPT
+   Key change: we tell the model to NEVER use apostrophes inside
+   JSON string values — use the unicode alternative or rephrase.
+   Also instruct it to escape properly.
+═══════════════════════════════ */
+const SYS = `Sei il Game Master di un GDR di sopravvivenza ambientato nella Kowloon Walled City di Hong Kong.
+
+PERSONAGGIO: MIRKO, nato 1968, italo-cinese. Gioco inizia 1979 (11 anni). Ogni round = 6 mesi.
+
+CONTESTO STORICO:
+- 0,026 km2, ~50.000 abitanti, densita record mondiale
+- Nessuna polizia entrava. Triadi: 14K, Sun Yee On
+- Fabbriche illegali, dentisti abusivi, ristoranti sul tetto
+- Corridoi bui, umidi, cavi elettrici ovunque
+
+PERSONAGGI (falli evolvere con memoria degli eventi):
+Benny Lam, Uncle Caruso, Sorella Mei, Boss Fong, Mr. Chan, Dragon
+
+EVENTI DINAMICI (0-1 per round, non sempre):
+Raid polizia ai confini, incendio corridoio, blackout totale, epidemia dengue, guerra tra fazioni Triade, nuovo misterioso abitante, demolizione piano, sequestro droga, mahjong clandestino, giornalisti stranieri.
+
+REGOLA CRITICA JSON:
+- Rispondi SOLO con JSON valido, nessun testo fuori
+- NON usare apostrofi (') dentro le stringhe JSON: scrivi "non e" invece di "non e'" oppure usa la forma completa senza contrazione
+- NON usare virgolette doppie (") dentro le stringhe JSON, usa solo parole o parafrasa
+- Tutti i valori stringa devono essere compatibili con JSON.parse() standard
+
+FORMATO RISPOSTA - solo questo JSON, nessun altro testo:
+{
+  "narrative": "testo 220-350 parole, seconda persona, italiano, tono crudo cinematografico, SENZA apostrofi nelle contrazioni come dell apostrofo o nell apostrofo",
+  "dynamic_event": null,
+  "sc": {"health":0,"money":0,"rep":0,"rep_label":"","edu":0,"str":0,"wit":0,"luck":0,"crim":0},
+  "inv_add": [{"icon":"emoji","name":"nome oggetto"}],
+  "inv_rem": ["nome"],
+  "sk_add":  [{"name":"nome skill","level":1}],
+  "sk_upd":  [{"name":"nome","level":2}],
+  "rel_upd": {"NomePersonaggio":{"status":"amico","desc":"descrizione breve"}},
+  "flags":   ["flag evento"],
+  "choices": [
+    {"text":"azione concreta","risk":"alto"},
+    {"text":"azione concreta","risk":"medio"},
+    {"text":"azione concreta","risk":"basso"}
+  ]
+}
+
+status valori: amico, neutro, nemico, alleato
+Se dynamic_event non esiste: null
+Liste vuote se non ci sono cambiamenti: []
+
+REGOLA STATS FONDAMENTALE - sc contiene DELTA non valori assoluti:
+- Ogni azione DEVE cambiare almeno 1-2 campi in sc. NON lasciare tutto a 0.
+- Mirko lavora: money = importo guadagnato (es 15, 25, 40)
+- Mirko studia: edu +1
+- Mirko combatte e vince: str +1, health -1, rep +5, money = premio
+- Mirko viene ferito: health -2 o -3
+- Mirko fa recapiti per triadi: money = importo, crim +1
+- Se la narrativa dice che guadagna X dollari, money DEVE essere X nel sc
+- inv_add e inv_rem: aggiorna sempre quando la narrativa descrive oggetti
+- rel_upd: aggiorna quando Mirko incontra o interagisce con personaggi`;
+
+/* ═══════════════════════════════
+   START
+═══════════════════════════════ */
+function startGame() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('game').style.display  = 'block';
+  conv = [{
+    role:'user',
+    content:'Inizia la partita. Round 1, gennaio 1979, Mirko 11 anni. Descrivi la sua situazione e le prime scelte. Ricorda: SOLO JSON valido, nessun apostrofo nelle stringhe.'
+  }];
+  callAI();
+}
+
+/* ═══════════════════════════════
+   API CALL — with robust JSON extraction
+═══════════════════════════════ */
+async function callAI() {
+  if (busy) return;
+  busy = true;
+  setLoad(true);
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system: SYS,
+        messages: conv
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error('HTTP ' + res.status + ': ' + err);
+    }
+
+    const data = await res.json();
+    const raw = (data.content || []).map(b => b.text || '').join('');
+    conv.push({ role:'assistant', content: raw });
+
+    const parsed = safeParseJSON(raw);
+    applyParsed(parsed);
+
+  } catch(e) {
+    console.error('[callAI]', e);
+    document.getElementById('narr').textContent =
+      'Errore: ' + e.message + '\n\nRicarica la pagina e riprova.';
+  }
+
+  setLoad(false);
+  busy = false;
+}
+
+/* ═══════════════════════════════
+   ROBUST JSON PARSER
+   Tries multiple strategies before giving up
+═══════════════════════════════ */
+function safeParseJSON(raw) {
+  // Strategy 0: strip ALL markdown fences aggressively
+  let s = raw.replace(/```(?:json)?\s*/gi,'').replace(/```/g,'').trim();
+  try { return JSON.parse(s); } catch(_) {}
+  // Strategy 1: original strip
+  s = raw.replace(/^```(?:json)?/gm,'').replace(/```$/gm,'').trim();
+  try { return JSON.parse(s); } catch(_) {}
+
+  // Strategy 2: extract first { ... } block (greedy from last })
+  const start = s.indexOf('{');
+  const end   = s.lastIndexOf('}');
+  if (start !== -1 && end !== -1) {
+    let sub = s.slice(start, end + 1);
+    try { return JSON.parse(sub); } catch(_) {}
+
+    // Strategy 3: fix common issues – unescaped apostrophes inside strings
+    // Replace ' that appear inside JSON string values with a safe char
+    let fixed = sub.replace(/"([^"\\]*)"/g, (match, inner) => {
+      // inside the string, replace lone apostrophes
+      const cleaned = inner.replace(/'/g, '\u2019'); // curly apostrophe, safe in JSON
+      return '"' + cleaned + '"';
+    });
+    try { return JSON.parse(fixed); } catch(_) {}
+
+    // Strategy 4: more aggressive – remove everything after last valid comma
+    // and re-close the object (for truncated responses)
+    try {
+      // find last complete key-value before error
+      const truncated = sub.replace(/,\s*"[^"]*"\s*:\s*[^,}\]]*$/, '') + '}';
+      return JSON.parse(truncated);
+    } catch(_) {}
+  }
+
+  // Fallback: return structure with raw text as narrative
+  console.warn('[safeParseJSON] All strategies failed, raw:', raw);
+  return {
+    narrative: raw.length > 20 ? raw.replace(/[{}[\]"]/g,'') : 'Risposta non valida. Riprova.',
+    dynamic_event: null, sc:{}, inv_add:[], inv_rem:[],
+    sk_add:[], sk_upd:[], rel_upd:{}, flags:[], choices:[]
+  };
+}
+
+/* ═══════════════════════════════
+   APPLY PARSED RESPONSE
+═══════════════════════════════ */
+function applyParsed(p) {
+  // Narrative
+  document.getElementById('narr').innerHTML = fmtNarr(p.narrative || '—');
+
+  // Dynamic event banner
+  if (p.dynamic_event && p.dynamic_event.title) {
+    document.getElementById('evtext').innerHTML =
+      '<strong>' + esc(p.dynamic_event.title) + ':</strong> ' + esc(p.dynamic_event.desc || '');
+    const b = document.getElementById('evbanner');
+    b.classList.add('on');
+    setTimeout(() => b.classList.remove('on'), 15000);
+  }
+
+  // Stats
+  const sc = p.sc || {};
+  const cl = (v,lo,hi) => Math.max(lo, Math.min(hi, v));
+  const nd = k => Math.round(Number(sc[k]) || 0); // robusto: gestisce stringhe e null
+  const dh=nd('health'),dm=nd('money'),dr=nd('rep'),de=nd('edu');
+  const ds=nd('str'),dw=nd('wit'),dl=nd('luck'),dc=nd('crim');
+  G.health = cl(G.health + dh, 0, 10);
+  G.money  = Math.max(0, G.money + dm);
+  G.rep    = cl(G.rep + dr, 0, 100);
+  G.edu    = cl(G.edu + de, 0, 10);
+  G.str    = cl(G.str + ds, 0, 10);
+  G.wit    = cl(G.wit + dw, 0, 10);
+  G.luck   = cl(G.luck + dl, 0, 10);
+  G.crim   = cl(G.crim + dc, 0, 10);
+  if (sc.rep_label && String(sc.rep_label).trim()) G.repLbl = sc.rep_label;
+  // Log delta nel diario
+  const parts=[];
+  if(dh)parts.push((dh>0?'+':'')+dh+'❤');
+  if(dm)parts.push((dm>0?'+':'')+dm+'$');
+  if(dr)parts.push((dr>0?'+':'')+dr+'rep');
+  if(de)parts.push((de>0?'+':'')+de+'edu');
+  if(ds)parts.push((ds>0?'+':'')+ds+'str');
+  if(dw)parts.push((dw>0?'+':'')+dw+'wit');
+  if(dl)parts.push((dl>0?'+':'')+dl+'luck');
+  if(dc)parts.push((dc>0?'+':'')+dc+'crim');
+  if(parts.length>0) addLog('⚡ '+parts.join(' '));
+
+  // Inventory
+  (p.inv_add || []).forEach(it => {
+    if (it && it.name && !G.inv.find(x=>x.name===it.name))
+      G.inv.push({icon:it.icon||'📦', name:it.name});
+  });
+  (p.inv_rem || []).forEach(nm => { G.inv = G.inv.filter(x=>x.name!==nm); });
+
+  // Skills
+  (p.sk_add || []).forEach(sk => {
+    if (sk && sk.name && !G.skills.find(x=>x.name===sk.name))
+      G.skills.push({name:sk.name, level:Math.min(5, (sk.level|0)||1)});
+  });
+  (p.sk_upd || []).forEach(sk => {
+    if (!sk || !sk.name) return;
+    const ex = G.skills.find(x=>x.name===sk.name);
+    if (ex) ex.level = Math.min(5, (sk.level|0)||ex.level);
+    else G.skills.push({name:sk.name, level:Math.min(5,(sk.level|0)||1)});
+  });
+
+  // Relations
+  if (p.rel_upd && typeof p.rel_upd === 'object') {
+    Object.entries(p.rel_upd).forEach(([nm,d]) => { if(nm&&d) G.rel[nm]=d; });
+  }
+
+  // Flags
+  (p.flags || []).filter(Boolean).forEach(f => { if(!G.flags.includes(f)) G.flags.push(f); });
+
+  // Choices
+  renderChoices(Array.isArray(p.choices) ? p.choices.filter(Boolean) : []);
+
+  renderUI();
+  autoSave();
+}
+
+/* ═══════════════════════════════
+   CHOICES
+═══════════════════════════════ */
+function renderChoices(choices) {
+  const g = document.getElementById('cgrid');
+  g.innerHTML = '';
+  if (!choices.length) {
+    g.innerHTML = '<div class="empty">Scrivi un\'azione personalizzata.</div>';
+    return;
+  }
+  choices.forEach((c,i) => {
+    if (!c || !c.text) return;
+    const risk = String(c.risk||'medio').toLowerCase();
+    const lbl  = risk==='alto' ? '⚠ ALTO' : risk==='basso' ? '◇ BASSO' : '◈ MEDIO';
+    const btn  = document.createElement('button');
+    btn.className = 'cbtn';
+    btn.innerHTML = `<span class="cnum">[${i+1}]</span>
+      <span class="ctxt">${esc(c.text)}<div class="crisk r-${risk}">RISCHIO: ${lbl}</div></span>`;
+    btn.onclick = () => choose(c.text);
+    g.appendChild(btn);
+  });
+}
+
+/* ═══════════════════════════════
+   ACTIONS
+═══════════════════════════════ */
+function choose(text) {
+  if (busy) return;
+  addLog(`[${G.year}·${G.sem===1?'S1':'S2'}] ${text}`);
+  advRound();
+  const stateCtx = `STATO ATTUALE MIRKO:
+eta:${G.age} anno:${G.year} sem:${G.sem} round:${G.round}
+salute:${G.health}/10 denaro:HK$${G.money} rep:${G.repLbl}(${G.rep})
+edu:${G.edu}/10 str:${G.str}/10 wit:${G.wit}/10 luck:${G.luck}/10 crim:${G.crim}/10
+inventario:${G.inv.map(i=>i.name).join(', ')||'vuoto'}
+abilita:${G.skills.map(s=>s.name+' lv'+s.level).join(', ')||'nessuna'}
+relazioni:${Object.entries(G.rel).map(([n,d])=>n+':'+d.status).join(', ')||'nessuna'}
+flags:${G.flags.join(', ')||'nessuno'}`;
+  conv.push({
+    role:'user',
+    content: `Mirko sceglie: "${text}"
+
+${stateCtx}
+
+Sc contiene DELTA non valori assoluti. Ogni azione deve cambiare almeno 1-2 stat. Se Mirko guadagna soldi metti l importo in money. SOLO JSON.`
+  });
+  callAI();
+}
+
+function sendCustom() {
+  const el = document.getElementById('custinp');
+  const t  = el.value.trim();
+  if (!t || busy) return;
+  el.value = '';
+  choose(t);
+}
+
+function advRound() {
+  G.round++;
+  if (G.sem===1) { G.sem=2; }
+  else { G.sem=1; G.year++; G.age++; }
+}
+
+/* ═══════════════════════════════
+   RENDER UI
+═══════════════════════════════ */
+function renderUI() {
+  // Timebar
+  document.getElementById('tdisp').textContent = `${G.year} · ${G.sem===1?'Gen-Giu':'Lug-Dic'}`;
+  document.getElementById('adisp').textContent = `${G.age} anni · R${G.round}`;
+
+  // Stats
+  const h = document.getElementById('sh');
+  h.textContent = `${G.health}/10`;
+  h.className   = 'sval ' + (G.health<=3?'danger':G.health>=7?'ok':'');
+  document.getElementById('bh').style.width  = (G.health*10)+'%';
+  document.getElementById('sm').textContent  = '$'+G.money;
+  document.getElementById('sr').textContent  = G.repLbl;
+  document.getElementById('br').style.width  = G.rep+'%';
+  document.getElementById('se').textContent  = G.edu+'/10';
+  document.getElementById('sst').textContent = G.str+'/10';
+  document.getElementById('sw').textContent  = G.wit+'/10';
+  document.getElementById('sl').textContent  = G.luck+'/10';
+  document.getElementById('sc').textContent  = G.crim+'/10';
+
+  // Skills
+  const sk = document.getElementById('sklist');
+  sk.innerHTML = G.skills.length
+    ? G.skills.map(s=>`<div class="skitem">
+        <span class="sknm">${esc(s.name)}</span>
+        <span class="sklv">${[1,2,3,4,5].map(n=>`<span class="skd${n<=s.level?' f':''}"></span>`).join('')}</span>
+      </div>`).join('')
+    : '<div class="empty">Nessuna abilita ancora.</div>';
+
+  // Inventory
+  const iv = document.getElementById('invg');
+  iv.innerHTML = G.inv.length
+    ? G.inv.map(i=>`<div class="invitem"><span class="invico">${i.icon}</span><span>${esc(i.name)}</span></div>`).join('')
+    : '<div class="empty">Nessun oggetto.</div>';
+
+  // Flags
+  document.getElementById('flaglist').innerHTML = G.flags.length
+    ? G.flags.map(f=>`<span style="color:var(--amber)">▸</span> ${esc(f)}<br>`).join('')
+    : '—';
+
+  // Relations
+  const rl = document.getElementById('rllist');
+  const en = Object.entries(G.rel);
+  rl.innerHTML = en.length
+    ? en.map(([nm,d])=>`<div class="rlitem">
+        <div class="rlhd">
+          <span class="rlnm">${esc(nm)}</span>
+          <span class="rlst ${d.status||'neutro'}">${(d.status||'neutro').toUpperCase()}</span>
+        </div>
+        <div class="rldsc">${esc(d.desc||'')}</div>
+      </div>`).join('')
+    : '<div class="empty">Nessun contatto ancora.</div>';
+}
+
+/* ═══════════════════════════════
+   HELPERS
+═══════════════════════════════ */
+function addLog(t) {
+  const box = document.getElementById('logbox');
+  const d = document.createElement('div');
+  d.className = 'logline';
+  d.textContent = t;
+  box.insertBefore(d, box.firstChild);
+}
+
+function setLoad(on) {
+  document.getElementById('loading').classList.toggle('on', on);
+  document.getElementById('sndbtn').disabled = on;
+  document.querySelectorAll('.cbtn').forEach(b => b.disabled = on);
+}
+
+function tab(name) {
+  const names = ['gioco','stats','inv','rel'];
+  document.querySelectorAll('.tb').forEach((b,i)    => b.classList.toggle('on', names[i]===name));
+  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('on', names[i]===name));
+}
+
+function fmtNarr(txt) {
+  if (!txt) return '';
+  return esc(txt)
+    .replace(/HK\$[\d,.]+/g,        m => `<span class="hl">${m}</span>`)
+    .replace(/\b(Benny|Caruso|Fong|Dragon|Mei|Chan|14K|Sun Yee On)\b/g,
+                                     m => `<span class="hl">${m}</span>`)
+    .replace(/\b(polizia|morte|morto|ferito|arrestato|sangue|brucia|bruciato)\b/gi,
+                                     m => `<span class="hlr">${m}</span>`);
+}
+
+function esc(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ═══════════════════════════════
+   SAVE / LOAD / EXPORT / IMPORT
+═══════════════════════════════ */
+const SAVE_KEY = 'kowloon_save_v1';
+
+// Auto-save to localStorage after every round
+function autoSave() {
+  const snapshot = {
+    G:    JSON.parse(JSON.stringify(G)),
+    conv: JSON.parse(JSON.stringify(conv)),
+    log:  Array.from(document.querySelectorAll('.logline')).map(el => el.textContent),
+    savedAt: new Date().toISOString()
+  };
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(snapshot)); } catch(e) { console.warn('AutoSave failed:', e); }
+}
+
+// Export save as downloadable JSON file
+function exportSave() {
+  autoSave();
+  const snapshot = localStorage.getItem(SAVE_KEY);
+  if (!snapshot) { alert('Nessun salvataggio disponibile.'); return; }
+  const blob = new Blob([snapshot], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'mirko_' + G.year + '_R' + G.round + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Import save from JSON file
+function importSave(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const snapshot = JSON.parse(e.target.result);
+      if (!snapshot.G || !snapshot.conv) throw new Error('File non valido');
+      localStorage.setItem(SAVE_KEY, JSON.stringify(snapshot));
+      alert('Salvataggio importato! Premi CONTINUA PARTITA.');
+      checkSave();
+    } catch(err) {
+      alert('Errore nel file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// Load save from localStorage and resume game
+function loadSave() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) { alert('Nessun salvataggio trovato.'); return; }
+  try {
+    const snapshot = JSON.parse(raw);
+    // Restore state
+    Object.assign(G, snapshot.G);
+    conv.length = 0;
+    snapshot.conv.forEach(m => conv.push(m));
+    // Show game
+    document.getElementById('intro').style.display = 'none';
+    document.getElementById('game').style.display  = 'block';
+    // Restore log
+    const logbox = document.getElementById('logbox');
+    logbox.innerHTML = '';
+    (snapshot.log || []).forEach(t => { const d=document.createElement('div'); d.className='logline'; d.textContent=t; logbox.appendChild(d); });
+    // Re-render UI
+    renderUI();
+    // Ask AI to summarise current situation and give new choices
+    conv.push({
+      role:'user',
+      content: 'Partita ripresa da salvataggio. Ricorda la situazione corrente: ' +
+        'eta:' + G.age + ', anno:' + G.year + ', sem:' + G.sem + ', salute:' + G.health + '/10, HK$' + G.money +
+        ', rep:"' + G.repLbl + '"(' + G.rep + '), edu:' + G.edu + ', str:' + G.str + ', wit:' + G.wit + ', luck:' + G.luck + ', crim:' + G.crim +
+        '. Inventario: ' + (G.inv.map(i=>i.name).join(', ')||'vuoto') +
+        '. Skills: ' + (G.skills.map(s=>s.name+' lv'+s.level).join(', ')||'nessuna') +
+        '. Relazioni: ' + (Object.entries(G.rel).map(([n,d])=>n+':'+d.status).join(', ')||'nessuna') +
+        '. Flags: ' + (G.flags.join(', ')||'nessuno') +
+        '. Fai un breve recap della situazione attuale e proponi 3 nuove scelte. SOLO JSON.'
+    });
+    callAI();
+  } catch(err) {
+    alert('Errore nel caricamento: ' + err.message);
+  }
+}
+
+// Check on page load if a save exists
+function checkSave() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) return;
+  try {
+    const snap = JSON.parse(raw);
+    const g = snap.G;
+    if (!g) return;
+    const date = snap.savedAt ? new Date(snap.savedAt).toLocaleDateString('it-IT') : '—';
+    document.getElementById('save-preview').innerHTML =
+      'Anno ' + g.year + ' · ' + (g.sem===1?'Gen-Giu':'Lug-Dic') + ' · Eta ' + g.age + ' · Round ' + g.round + '<br>' +
+      'Salute: ' + g.health + '/10  Denaro: HK$' + g.money + '  Rep: ' + g.repLbl + '<br>' +
+      '<span style="color:var(--dim);font-size:9px;">Salvato il ' + date + '</span>';
+    document.getElementById('save-section').style.display = 'block';
+  } catch(_) {}
+}
+
+// Call checkSave on DOM ready
+document.addEventListener('DOMContentLoaded', function() {  });
+
+
+
+</script>
+</body>
+</html>
