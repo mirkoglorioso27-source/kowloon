@@ -3,849 +3,813 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#050302">
-<title>KOWLOON WALLED CITY · GDR</title>
+<title>KOWLOON WALLED CITY</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+HK:wght@300;700&family=Oswald:wght@700&display=swap');
-
-:root {
-  --red:#c0392b; --amber:#e67e22; --gold:#f39c12;
-  --dark:#050302; --mid:#171008; --text:#c8b89a;
-  --dim:#6b5a40; --bright:#f5e6cc; --green:#27ae60;
-}
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+HK:wght@700&family=Oswald:wght@700&display=swap');
+:root{--red:#c0392b;--amb:#e67e22;--gold:#f39c12;--dark:#050302;--mid:#171008;--mid2:#0d0804;--text:#c8b89a;--dim:#5a4a30;--bright:#f5e6cc;--green:#27ae60;--bdr:#2a1a08;--blue:#2980b9;}
 *{margin:0;padding:0;box-sizing:border-box;}
-
-body {
-  background:var(--dark); color:var(--text);
-  font-family:'Share Tech Mono',monospace;
-  min-height:100vh; overflow-x:hidden;
-}
-body::after {
-  content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.055) 2px,rgba(0,0,0,0.055) 4px);
-}
-
-.wrap { max-width:900px; margin:0 auto; padding:14px 11px 80px; }
-
-/* HEADER */
-.header { text-align:center; padding:22px 0 16px; border-bottom:1px solid #2a1a08; margin-bottom:12px; }
-.hcn { font-family:'Noto Sans HK',sans-serif; font-size:11px; color:var(--red); letter-spacing:6px; margin-bottom:4px; opacity:.85; }
-.htitle { font-family:'Oswald',sans-serif; font-size:clamp(22px,6.5vw,46px); font-weight:700; color:var(--bright); letter-spacing:4px; text-shadow:0 0 40px rgba(192,57,43,.5); }
-.hsub { font-size:8px; color:var(--dim); letter-spacing:3px; margin-top:5px; }
-
-/* TIME */
-.timebar { background:var(--mid); border:1px solid #2a1a08; padding:9px 14px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
-.tlabel { font-size:8px; color:var(--dim); letter-spacing:2px; }
-.tvalue { font-family:'Oswald',sans-serif; font-size:17px; color:var(--amber); letter-spacing:2px; }
-
-/* EVENT BANNER */
-.evbanner { background:#180606; border:1px solid var(--red); border-left:3px solid var(--red); padding:9px 13px; margin-bottom:10px; display:none; animation:fIn .35s ease; }
-.evbanner.on { display:block; }
-.evtitle { font-size:8px; letter-spacing:2px; color:var(--red); margin-bottom:3px; }
-.evtext { font-size:11px; color:var(--bright); line-height:1.65; }
-@keyframes fIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
-
-/* TABS */
-.tabs { display:flex; gap:3px; margin-bottom:10px; }
-.tb { flex:1; background:var(--mid); border:1px solid #2a1a08; color:var(--dim); font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:1px; padding:8px 3px; cursor:pointer; transition:all .15s; }
-.tb.on { border-color:var(--red); color:var(--bright); background:#1c1109; }
-
-.panel { display:none; }
-.panel.on { display:block; }
-
-/* ── NARRATIVE BOX – tall enough to read ── */
-.narr-box {
-  background:#0b0703;
-  border:1px solid #2a1a08;
-  border-left:3px solid var(--red);
-  padding:18px 18px 18px 16px;
-  margin-bottom:12px;
-  position:relative;
-  min-height:min(320px, 42vh);
-}
-.narr-tag { position:absolute; top:-1px; left:13px; background:var(--red); color:#fff; font-size:7px; letter-spacing:2px; padding:2px 8px; }
-/* scrollable if very long */
-.narr-scroll {
-  margin-top:7px;
-  max-height:min(500px, 55vh);
-  overflow-y:auto;
-  scrollbar-width:thin;
-  scrollbar-color:var(--red) transparent;
-  padding-right:4px;
-}
-.narr-text { font-size:14px; line-height:2.05; color:var(--bright); white-space:pre-wrap; }
-.narr-text .hl  { color:var(--gold); }
-.narr-text .hlr { color:var(--red);  }
-
-/* CHOICES */
-.slabel { font-size:8px; color:var(--dim); letter-spacing:3px; margin-bottom:7px; }
-.cgrid  { display:grid; gap:5px; margin-bottom:12px; }
-.cbtn {
-  background:var(--mid); border:1px solid #3a2010; color:var(--text);
-  padding:12px 13px; text-align:left;
-  font-family:'Share Tech Mono',monospace; font-size:12px;
-  cursor:pointer; transition:all .15s;
-  display:flex; align-items:flex-start; gap:9px;
-  position:relative; overflow:hidden; width:100%;
-}
-.cbtn::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,rgba(192,57,43,.1),transparent); opacity:0; transition:opacity .2s; }
-.cbtn:hover { border-color:var(--red); color:var(--bright); }
-.cbtn:hover::after { opacity:1; }
-.cbtn:disabled { opacity:.35; cursor:not-allowed; }
-.cnum { color:var(--red); font-size:9px; min-width:16px; margin-top:1px; }
-.ctxt { flex:1; line-height:1.55; }
-.crisk { font-size:7px; margin-top:3px; }
-.r-alto  { color:var(--red); }
-.r-medio { color:var(--amber); }
-.r-basso { color:var(--green); }
-
-/* CUSTOM INPUT */
-.custwrap { display:flex; gap:5px; margin-bottom:12px; }
-.custinp {
-  flex:1; background:var(--mid); border:1px solid #3a2010;
-  color:var(--bright); font-family:'Share Tech Mono',monospace;
-  font-size:12px; padding:10px 12px; outline:none;
-  transition:border-color .2s;
-}
-.custinp:focus { border-color:var(--amber); }
-.custinp::placeholder { color:var(--dim); }
-.sndbtn {
-  background:var(--red); border:none; color:#fff;
-  font-family:'Oswald',sans-serif; font-size:11px;
-  letter-spacing:2px; padding:10px 15px; cursor:pointer;
-  transition:background .15s; white-space:nowrap;
-}
-.sndbtn:hover { background:#a93226; }
-.sndbtn:disabled { background:#3a2010; color:var(--dim); cursor:not-allowed; }
-
-/* LOADING */
-.loading { display:none; text-align:center; padding:22px; color:var(--dim); }
-.loading.on { display:block; }
-.dot { display:inline-block; animation:blink 1s infinite; }
-.dot:nth-child(2){animation-delay:.3s} .dot:nth-child(3){animation-delay:.6s}
+body{background:var(--dark);color:var(--text);font-family:'Share Tech Mono',monospace;min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.05) 2px,rgba(0,0,0,0.05) 4px);}
+.wrap{max-width:900px;margin:0 auto;padding:14px 11px 80px;}
+.header{text-align:center;padding:22px 0 16px;border-bottom:1px solid var(--bdr);margin-bottom:12px;}
+.hcn{font-family:'Noto Sans HK',sans-serif;font-size:11px;color:var(--red);letter-spacing:6px;margin-bottom:4px;opacity:.85;}
+.htitle{font-family:'Oswald',sans-serif;font-size:clamp(22px,6.5vw,46px);font-weight:700;color:var(--bright);letter-spacing:4px;text-shadow:0 0 40px rgba(192,57,43,.5);}
+.hsub{font-size:8px;color:var(--dim);letter-spacing:3px;margin-top:5px;}
+.timebar{background:var(--mid);border:1px solid var(--bdr);padding:9px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
+.tlabel{font-size:8px;color:var(--dim);letter-spacing:2px;}
+.tvalue{font-family:'Oswald',sans-serif;font-size:17px;color:var(--amb);letter-spacing:2px;}
+.repbadge{display:inline-block;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;padding:3px 10px;border-radius:2px;margin-bottom:8px;}
+.rep-0{background:#1a1a0a;color:var(--dim);border:1px solid var(--dim);}
+.rep-1{background:#1a1208;color:var(--amb);border:1px solid var(--amb);}
+.rep-2{background:#1a0808;color:var(--red);border:1px solid var(--red);}
+.rep-3{background:#0a1a0a;color:var(--green);border:1px solid var(--green);}
+.rep-4{background:#0a0a1a;color:#9b59b6;border:1px solid #9b59b6;}
+.rep-5{background:#1a1000;color:var(--gold);border:1px solid var(--gold);box-shadow:0 0 8px rgba(243,156,18,.3);}
+.injury-item{display:inline-block;background:#3a0a0a;color:var(--red);border:1px solid #5a1a1a;padding:2px 8px;margin:2px;font-size:8px;letter-spacing:1px;}
+.disease-item{display:inline-block;background:#0a2a1a;color:var(--green);border:1px solid #1a4a2a;padding:2px 8px;margin:2px;font-size:8px;letter-spacing:1px;}
+.evbanner{background:#180606;border:1px solid var(--red);border-left:3px solid var(--red);padding:9px 13px;margin-bottom:10px;display:none;}
+.evbanner.on{display:block;}
+.evtitle{font-size:8px;letter-spacing:2px;color:var(--red);margin-bottom:3px;}
+.evtext{font-size:11px;color:var(--bright);line-height:1.65;}
+.weather-bar{background:var(--mid);border:1px solid var(--bdr);padding:6px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px;font-size:10px;}
+.weather-effect{font-size:8px;color:var(--dim);margin-left:auto;}
+.timeline{background:var(--mid2);border:1px solid var(--bdr);padding:10px 12px;margin-bottom:10px;overflow-x:auto;}
+.tl-track{position:relative;height:44px;min-width:500px;}
+.tl-line{position:absolute;top:20px;left:0;right:0;height:2px;background:var(--bdr);}
+.tl-prog{position:absolute;top:20px;left:0;height:2px;background:var(--red);}
+.tl-dot{position:absolute;top:13px;width:14px;height:14px;border-radius:50%;border:2px solid var(--bdr);background:var(--dark);transform:translateX(-50%);}
+.tl-dot.past{background:var(--dim);border-color:var(--dim);}
+.tl-dot.now{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px rgba(243,156,18,.6);}
+.tl-lbl{position:absolute;top:30px;font-size:7px;color:var(--dim);transform:translateX(-50%);white-space:nowrap;}
+.tl-lbl.now{color:var(--gold);}
+.tl-yr{position:absolute;top:2px;font-size:7px;color:var(--dim);transform:translateX(-50%);}
+.tabs{display:flex;gap:2px;margin-bottom:10px;flex-wrap:wrap;}
+.tb{flex:1;min-width:55px;background:var(--mid);border:1px solid var(--bdr);color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:1px;padding:7px 2px;cursor:pointer;text-align:center;}
+.tb.on{border-color:var(--red);color:var(--bright);background:#1c1109;}
+.panel{display:none;}.panel.on{display:block;}
+.narr-box{background:var(--mid2);border:1px solid var(--bdr);border-left:3px solid var(--red);padding:16px 14px 14px;margin-bottom:12px;position:relative;min-height:200px;}
+.narr-tag{position:absolute;top:-1px;left:12px;background:var(--red);color:#fff;font-size:7px;letter-spacing:2px;padding:2px 8px;}
+.narr-scroll{margin-top:6px;max-height:45vh;overflow-y:auto;}
+.narr-text{font-size:13px;line-height:2;color:var(--bright);white-space:pre-wrap;word-break:break-word;}
+.narr-text .hl{color:var(--gold);}.narr-text .hlr{color:var(--red);}
+.slabel{font-size:8px;color:var(--dim);letter-spacing:3px;margin-bottom:7px;}
+.cgrid{display:grid;gap:5px;margin-bottom:12px;}
+.cbtn{background:var(--mid);border:1px solid #3a2010;color:var(--text);padding:12px 13px;text-align:left;font-family:'Share Tech Mono',monospace;font-size:12px;cursor:pointer;display:flex;align-items:flex-start;gap:9px;width:100%;}
+.cbtn:hover{border-color:var(--red);color:var(--bright);}
+.cbtn:disabled{opacity:.35;cursor:not-allowed;}
+.cnum{color:var(--red);font-size:9px;min-width:16px;margin-top:1px;}
+.ctxt{flex:1;line-height:1.55;}
+.crisk{font-size:7px;margin-top:3px;}
+.r-alto{color:var(--red);}.r-medio{color:var(--amb);}.r-basso{color:var(--green);}
+.custwrap{display:flex;gap:5px;margin-bottom:12px;}
+.custinp{flex:1;background:var(--mid);border:1px solid #3a2010;color:var(--bright);font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px 12px;outline:none;}
+.custinp::placeholder{color:var(--dim);}
+.sndbtn{background:var(--red);border:none;color:#fff;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2px;padding:10px 15px;cursor:pointer;}
+.sndbtn:disabled{background:#3a2010;color:var(--dim);cursor:not-allowed;}
+.loading{display:none;text-align:center;padding:22px;color:var(--dim);}
+.loading.on{display:block;}
+.dot{display:inline-block;animation:blink 1s infinite;}
+.dot:nth-child(2){animation-delay:.3s;}.dot:nth-child(3){animation-delay:.6s;}
 @keyframes blink{0%,100%{opacity:.15}50%{opacity:1}}
-
-/* LOG */
-.logbox { max-height:90px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--red) transparent; }
-.logline { font-size:9px; color:var(--dim); padding:3px 0; border-bottom:1px solid #130c04; line-height:1.5; }
-
-hr { border:none; border-top:1px solid #1a1008; margin:10px 0; }
-
-/* ── STATS tab ── */
-.sgrid { display:grid; grid-template-columns:repeat(2,1fr); gap:5px; margin-bottom:7px; }
+.logbox{max-height:80px;overflow-y:auto;}
+.logline{font-size:9px;color:var(--dim);padding:3px 0;border-bottom:1px solid #130c04;line-height:1.5;}
+.logline.delta{color:var(--green);}
+hr{border:none;border-top:1px solid var(--bdr);margin:10px 0;}
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-bottom:7px;}
 @media(min-width:480px){.sgrid{grid-template-columns:repeat(4,1fr);}}
-.sbox { background:var(--mid); border:1px solid #2a1a08; padding:7px 10px; position:relative; }
-.sbox::before { content:''; position:absolute; top:0;left:0;right:0;height:2px;background:var(--red);opacity:.4; }
-.slb { font-size:7px; color:var(--dim); letter-spacing:2px; margin-bottom:2px; }
-.sval { font-size:15px; color:var(--gold); }
-.sval.danger{color:var(--red)} .sval.ok{color:var(--green)}
-.bar { height:3px; background:#2a1a08; margin-top:4px; border-radius:2px; overflow:hidden; }
-.bf  { height:100%; border-radius:2px; transition:width .45s; }
-.bh  { background:linear-gradient(90deg,var(--red),var(--green)); }
-.br  { background:linear-gradient(90deg,var(--dim),var(--gold)); }
-
-/* SKILLS */
-.sklist { display:grid; gap:5px; margin-bottom:8px; }
-.skitem { background:var(--mid); border:1px solid #2a1a08; padding:7px 11px; display:flex; justify-content:space-between; align-items:center; }
-.sknm { font-size:10px; color:var(--bright); }
-.sklv { display:flex; gap:3px; }
-.skd  { width:7px; height:7px; border-radius:50%; background:#2a1a08; }
-.skd.f{ background:var(--gold); }
-
-/* INVENTORY */
-.invg { display:grid; grid-template-columns:repeat(2,1fr); gap:5px; margin-bottom:8px; }
-@media(min-width:400px){.invg{grid-template-columns:repeat(3,1fr);}}
-.invitem { background:var(--mid); border:1px solid #2a1a08; padding:7px 9px; font-size:10px; color:var(--text); display:flex; align-items:center; gap:6px; }
-.invico  { font-size:13px; }
-
-/* RELATIONS */
-.rllist { display:grid; gap:5px; margin-bottom:8px; }
-.rlitem { background:var(--mid); border:1px solid #2a1a08; padding:9px 11px; }
-.rlhd   { display:flex; justify-content:space-between; align-items:center; margin-bottom:3px; }
-.rlnm   { font-size:11px; color:var(--bright); }
-.rlst   { font-size:8px; letter-spacing:1px; padding:2px 6px; }
-.rlst.amico   { background:#1a3a1a; color:var(--green); }
-.rlst.neutro  { background:#2a2010; color:var(--amber); }
-.rlst.nemico  { background:#3a1010; color:var(--red); }
-.rlst.alleato { background:#102030; color:#5dade2; }
-.rldsc  { font-size:9px; color:var(--dim); line-height:1.55; }
-
-.empty { color:var(--dim); font-size:10px; font-style:italic; padding:6px 0; }
-
-/* INTRO */
-#intro { text-align:center; padding:30px 14px; }
-.itxt { font-size:12px; line-height:2.1; color:var(--text); max-width:480px; margin:14px auto 26px; }
-.strt { background:transparent; border:2px solid var(--red); color:var(--red); font-family:'Oswald',sans-serif; font-size:15px; letter-spacing:4px; padding:13px 40px; cursor:pointer; transition:all .2s; }
-.strt:hover { background:var(--red); color:#fff; box-shadow:0 0 28px rgba(192,57,43,.4); }
+.sbox{background:var(--mid);border:1px solid var(--bdr);padding:7px 10px;position:relative;}
+.sbox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red);opacity:.4;}
+.slb{font-size:7px;color:var(--dim);letter-spacing:2px;margin-bottom:2px;}
+.sval{font-family:'Oswald',sans-serif;font-size:15px;color:var(--gold);}
+.sval.danger{color:var(--red);}.sval.ok{color:var(--green);}
+.bar{height:3px;background:var(--bdr);margin-top:4px;border-radius:2px;overflow:hidden;}
+.bf{height:100%;border-radius:2px;transition:width .45s;}
+.bh{background:linear-gradient(90deg,var(--red),var(--green));}
+.br{background:linear-gradient(90deg,var(--dim),var(--gold));}
+.sklist{display:grid;gap:5px;margin-bottom:8px;}
+.skitem{background:var(--mid);border:1px solid var(--bdr);padding:7px 11px;display:flex;justify-content:space-between;align-items:center;}
+.sknm{font-size:10px;color:var(--bright);}
+.sklv{display:flex;gap:3px;}
+.skd{width:7px;height:7px;border-radius:50%;background:var(--bdr);}.skd.f{background:var(--gold);}
+.invg{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-bottom:8px;}
+.invitem{background:var(--mid);border:1px solid var(--bdr);padding:7px 9px;font-size:10px;color:var(--text);display:flex;align-items:center;gap:6px;}
+.rllist{display:grid;gap:5px;margin-bottom:8px;}
+.rlitem{background:var(--mid);border:1px solid var(--bdr);padding:9px 11px;cursor:pointer;}
+.rlitem:hover{border-color:var(--amb);}
+.rlhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}
+.rlnm{font-size:11px;color:var(--bright);}
+.rlst{font-size:8px;letter-spacing:1px;padding:2px 6px;background:#1a3a1a;color:var(--green);}
+.rlst.neutro,.rlst.conoscente{background:#2a2010;color:var(--amb);}
+.rlst.nemico,.rlst.ostile{background:#3a1010;color:var(--red);}
+.rlst.complice,.rlst.socio,.rlst.alleato,.rlst.contatto{background:#102030;color:#5dade2;}
+.rldsc{font-size:9px;color:var(--dim);line-height:1.55;}
+.rltrust{height:3px;background:var(--bdr);margin-top:5px;border-radius:2px;overflow:hidden;}
+.rltrust-fill{height:100%;background:var(--gold);}
+.map-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:8px;}
+.mc{aspect-ratio:1;background:var(--mid);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:6px;text-align:center;cursor:default;}
+.mc.owned{background:#0a1a0a;border-color:var(--green);}
+.mc.k14{background:#1a0808;border-color:var(--red);}
+.mc.syeon{background:#08081a;border-color:var(--blue);}
+.mc.contested{background:#1a1008;border-color:var(--amb);}
+.map-leg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;font-size:8px;}
+.ml{display:flex;align-items:center;gap:4px;}
+.mld{width:10px;height:10px;border-radius:1px;}
+.news-item{background:var(--mid);border:1px solid var(--bdr);border-left:2px solid var(--amb);padding:9px 12px;margin-bottom:6px;}
+.news-date{font-size:8px;color:var(--dim);letter-spacing:2px;margin-bottom:3px;}
+.news-title{font-size:11px;color:var(--bright);line-height:1.5;}
+.news-body{font-size:9px;color:var(--dim);margin-top:4px;line-height:1.6;}
+.dossier-item{background:var(--mid);border:1px solid var(--bdr);padding:12px;margin-bottom:6px;}
+.dossier-name{font-family:'Oswald',sans-serif;font-size:13px;color:var(--bright);letter-spacing:2px;}
+.dossier-role{font-size:8px;color:var(--amb);letter-spacing:2px;margin-bottom:6px;}
+.dossier-body{font-size:9px;color:var(--dim);line-height:1.8;}
+.dossier-tag{font-size:8px;padding:2px 7px;border:1px solid var(--bdr);color:var(--text);display:inline-block;margin:2px;}
+.talk-btn{background:transparent;border:1px solid var(--amb);color:var(--amb);font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:1px;padding:5px 12px;cursor:pointer;margin-top:8px;width:100%;}
+.talk-btn:hover{background:var(--amb);color:#000;}
+.mkt-item{background:var(--mid);border:1px solid var(--bdr);padding:9px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.mkt-name{font-size:10px;color:var(--bright);}
+.mkt-price{font-family:'Oswald',sans-serif;font-size:13px;color:var(--gold);}
+.mkt-price.alta{color:var(--red);}
+.mkt-price.bassa{color:var(--green);}
+.mkt-btn{background:transparent;border:1px solid var(--red);color:var(--red);font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:1px;padding:4px 10px;cursor:pointer;margin-left:8px;}
+.mkt-btn.vendi{border-color:var(--green);color:var(--green);}
+.mkt-btn:disabled{opacity:.35;cursor:not-allowed;}
+.quest-item{background:var(--mid);border:1px solid var(--bdr);padding:10px 12px;margin-bottom:6px;}
+.quest-item.attiva{border-color:var(--amb);}
+.quest-item.completata{border-color:var(--green);opacity:.7;}
+.quest-name{font-size:11px;color:var(--bright);font-family:'Oswald',sans-serif;letter-spacing:1px;}
+.quest-badge{font-size:8px;padding:2px 7px;letter-spacing:1px;}
+.quest-badge.attiva{background:#1a1200;color:var(--amb);border:1px solid var(--amb);}
+.quest-badge.completata{background:#0a1a0a;color:var(--green);border:1px solid var(--green);}
+.quest-desc{font-size:9px;color:var(--dim);margin:5px 0;line-height:1.6;}
+.quest-prog{height:4px;background:var(--bdr);border-radius:2px;overflow:hidden;margin-top:4px;}
+.quest-fill{height:100%;background:var(--amb);}
+.quest-fill.green{background:var(--green);}
+.skill-branch{background:var(--mid);border:1px solid var(--bdr);padding:10px 12px;margin-bottom:6px;}
+.skill-br-title{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2px;margin-bottom:8px;}
+.skill-node{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-top:1px solid var(--bdr);}
+.skill-node-name{font-size:10px;color:var(--text);}
+.skill-node-cost{font-size:8px;color:var(--dim);}
+.skill-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:1px;padding:3px 8px;cursor:pointer;}
+.skill-btn:disabled{border-color:var(--bdr);color:var(--dim);cursor:not-allowed;}
+.skill-btn.owned{border-color:var(--green);color:var(--green);cursor:default;}
+.faction-item{background:var(--mid);border:1px solid var(--bdr);padding:8px 12px;margin-bottom:5px;}
+.faction-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.faction-rep{font-size:9px;color:var(--gold);font-family:'Oswald',sans-serif;}
+.faction-bar{height:4px;background:var(--bdr);border-radius:2px;overflow:hidden;}
+.faction-fill{height:100%;border-radius:2px;}
+.empty{color:var(--dim);font-size:10px;font-style:italic;padding:6px 0;}
+.rbtn{background:transparent;border:1px solid var(--red);color:var(--red);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;padding:8px 14px;cursor:pointer;}
+.dbtn{background:transparent;border:1px solid var(--dim);color:var(--dim);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;padding:8px 14px;cursor:pointer;}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9000;align-items:center;justify-content:center;padding:14px;}
+.modal.on{display:flex;}
+.mbox{background:#0d0804;border:1px solid var(--bdr);border-top:2px solid var(--red);padding:18px;width:100%;max-width:520px;display:flex;flex-direction:column;gap:10px;max-height:90vh;overflow-y:auto;}
+.mtitle{font-family:'Oswald',sans-serif;font-size:14px;color:var(--bright);letter-spacing:2px;}
+.mhint{font-size:10px;color:var(--dim);line-height:1.7;}
+.mta{flex:1;min-height:180px;background:#050302;border:1px solid var(--bdr);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:10px;padding:10px;resize:vertical;outline:none;}
+.mbtns{display:flex;gap:8px;}
+.mbtns button{flex:1;padding:10px;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2px;cursor:pointer;}
+#intro{text-align:center;padding:30px 14px;}
+.itxt{font-size:12px;line-height:2.1;color:var(--text);max-width:480px;margin:14px auto 26px;}
+.strt{background:transparent;border:2px solid var(--red);color:var(--red);font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:4px;padding:13px 40px;cursor:pointer;}
+.strt:hover{background:var(--red);color:#fff;}
 </style>
 </head>
 <body>
-<div class="wrap">
-
-<div class="header">
-  <div class="hcn">九龍寨城 · 生存模擬</div>
-  <div class="htitle">KOWLOON WALLED CITY</div>
-  <div class="hsub">SIMULAZIONE DI SOPRAVVIVENZA · HONG KONG 1979</div>
+<div class='wrap'>
+<div class='header'>
+  <div class='hcn'>&#20061;&#40857;&#23646;&#22478; &middot; &#29983;&#23384;&#27169;&#25311;</div>
+  <div class='htitle'>KOWLOON WALLED CITY</div>
+  <div class='hsub'>SIMULAZIONE DI SOPRAVVIVENZA &middot; HONG KONG 1969</div>
 </div>
 
-<!-- INTRO -->
-
-<!-- API KEY MODAL -->
-<div id="apimodal" style="display:none;position:fixed;inset:0;background:rgba(5,3,2,0.97);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;">
-  <div style="max-width:480px;width:100%;background:#0d0804;border:1px solid #2a1a08;border-top:3px solid #c0392b;padding:28px 22px;">
-    <div style="font-family:'Oswald',sans-serif;font-size:22px;color:#f5e6cc;letter-spacing:3px;margin-bottom:6px;">CHIAVE API</div>
-    <div style="font-size:10px;color:#6b5a40;letter-spacing:2px;margin-bottom:18px;">ANTHROPIC · RICHIESTA PER GIOCARE</div>
-    <p style="font-size:12px;color:#c8b89a;line-height:1.8;margin-bottom:18px;">
-      Inserisci la tua API key di Anthropic.<br>
-      Non viene salvata su nessun server — rimane solo nel browser.<br>
-      <a href="https://console.anthropic.com/keys" target="_blank" style="color:#e67e22;font-size:11px;">Ottieni la tua chiave → console.anthropic.com</a>
-    </p>
-    <input id="apikey-inp" type="password"
-      placeholder="sk-ant-api03-..."
-      style="width:100%;background:#171008;border:1px solid #3a2010;color:#f5e6cc;font-family:'Share Tech Mono',monospace;font-size:12px;padding:11px 13px;outline:none;margin-bottom:10px;">
-    <div id="apikey-err" style="font-size:10px;color:#c0392b;margin-bottom:10px;display:none;">Chiave non valida. Inizia con sk-ant-</div>
-    <button onclick="confirmApiKey()" style="width:100%;background:#c0392b;border:none;color:#fff;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:3px;padding:12px;cursor:pointer;">CONFERMA E GIOCA</button>
-    <p style="font-size:9px;color:#3a2a15;margin-top:12px;line-height:1.6;">La chiave viene salvata in localStorage solo su questo dispositivo. Puoi revocarla in qualsiasi momento dal pannello Anthropic.</p>
-  </div>
+<div id='intro'>
+  <p class='itxt'>Sei <strong style='color:var(--gold)'>Mirko</strong>, 11 anni.<br>
+  Nato nel 1958 nella Kowloon Walled City.<br>50.000 anime in 0,026 km&#178;.<br>
+  Triadi. Fabbriche illegali. Nessuna legge.<br><br>
+  Ogni round = 2 mesi. Ogni scelta conta.<br>
+  <span style='color:var(--red)'>Sopravvivi. Cresci. Esci.</span></p>
+  <button class='strt' onclick='startGame()'>&#9658; NUOVA PARTITA</button>
+  <div style='margin-top:14px;'><button class='dbtn' onclick='openModal("import")'>&#8679; IMPORTA SALVATAGGIO</button></div>
 </div>
 
-<div id="intro">
-  <p class="itxt">
-    Sei <strong style="color:var(--gold)">Mirko</strong>, 11 anni.<br>
-    Nato nel 1968 nella Kowloon Walled City —<br>
-    50.000 anime in 0,026 km².<br>
-    Nessuna polizia entra qui. Solo Triadi, fabbriche<br>
-    illegali, corridoi bui e la tua volontà di sopravvivere.<br><br>
-    Ogni round = 6 mesi. Ogni scelta conta.<br>
-    <span style="color:var(--red)">Sopravvivi. Cresci. Esci.</span>
-  </p>
-  <button class="strt" onclick="startGame()">▶ NUOVA PARTITA</button>
-
-  <div id="save-section" style="display:none; margin-top:24px;">
-    <div style="font-size:9px;color:var(--dim);letter-spacing:3px;margin-bottom:10px;">▸ SALVATAGGIO TROVATO</div>
-    <button class="strt" style="font-size:13px;padding:11px 30px;margin-bottom:6px;" onclick="loadSave()">⟳ CONTINUA PARTITA</button>
-    <div id="save-preview" style="font-size:10px;color:var(--dim);margin-top:6px;line-height:1.8;"></div>
-  </div>
-
-  <div style="margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-    <label style="background:transparent;border:1px solid var(--dim);color:var(--dim);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;padding:9px 16px;cursor:pointer;display:inline-block;">
-      ⬆ IMPORTA SALVATAGGIO
-      <input type="file" accept=".json" style="display:none" onchange="importSave(event)">
-    </label>
-  </div>
-</div>
-
-<!-- GAME -->
-<div id="game" style="display:none">
-
-  <div class="timebar">
-    <div><div class="tlabel">ANNO · SEMESTRE</div><div class="tvalue" id="tdisp">1979 · Gen-Giu</div></div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div style="text-align:right"><div class="tlabel">ETÀ · ROUND</div><div class="tvalue" id="adisp">11 anni · R1</div></div>
-      <button onclick="exportSave()" title="Salva partita" style="background:var(--red);border:none;color:#fff;font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:1px;padding:6px 10px;cursor:pointer;white-space:nowrap;">💾 SALVA</button>
-      <button onclick="resetApiKey()" title="Cambia API key" style="background:transparent;border:1px solid var(--dim);color:var(--dim);font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:1px;padding:6px 8px;cursor:pointer;">🔑</button>
+<div id='game' style='display:none'>
+  <div class='timebar'>
+    <div><div class='tlabel'>ANNO &middot; MESE</div><div class='tvalue' id='tdisp'>1969 - Gen</div></div>
+    <div style='display:flex;align-items:center;gap:8px;'>
+      <div style='text-align:right'><div class='tlabel'>ETA &middot; ROUND</div><div class='tvalue' id='adisp'>11 anni - R1</div></div>
+      <button onclick='openModal("export")' style='background:var(--red);border:none;color:#fff;font-family:Oswald,sans-serif;font-size:9px;letter-spacing:1px;padding:5px 9px;cursor:pointer;'>SALVA</button>
     </div>
   </div>
-
-  <div class="evbanner" id="evbanner">
-    <div class="evtitle">⚠ EVENTO DINAMICO</div>
-    <div class="evtext" id="evtext"></div>
+  <div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;'>
+    <div id='repbadge' class='repbadge rep-0'>SCONOSCIUTO</div>
+    <div id='injury-display' style='font-size:9px;color:var(--red);'></div>
   </div>
-
-  <div class="tabs">
-    <button class="tb on"  onclick="tab('gioco')">▶ GIOCO</button>
-    <button class="tb"     onclick="tab('stats')">◈ STATS</button>
-    <button class="tb"     onclick="tab('inv')">⊞ INVENTARIO</button>
-    <button class="tb"     onclick="tab('rel')">◉ RELAZIONI</button>
+  <div class='weather-bar' id='weather-bar'>
+    <span id='weather-icon' style='font-size:16px;'>[?]</span>
+    <span id='weather-txt' style='color:var(--text);'></span>
+    <span class='weather-effect' id='weather-effect'></span>
   </div>
-
-  <!-- ── TAB GIOCO ── -->
-  <div class="panel on" id="p-gioco">
-    <div class="narr-box">
-      <div class="narr-tag">SITUAZIONE</div>
-      <div class="narr-scroll">
-        <div class="narr-text" id="narr">Caricamento...</div>
-      </div>
+  <div class='timeline'><div class='tl-track' id='tl-track'></div></div>
+  <div class='evbanner' id='evbanner'><div class='evtitle'>EVENTO</div><div class='evtext' id='evtext'></div></div>
+  <div class='tabs'>
+    <button class='tb on' onclick='switchTab(0)'>GIOCO</button>
+    <button class='tb' onclick='switchTab(1)'>STATS</button>
+    <button class='tb' onclick='switchTab(2)'>INV</button>
+    <button class='tb' onclick='switchTab(3)'>REL</button>
+    <button class='tb' onclick='switchTab(4)'>MAPPA</button>
+    <button class='tb' onclick='switchTab(5)'>NEWS</button>
+    <button class='tb' onclick='switchTab(6)'>NPC</button>
+    <button class='tb' onclick='switchTab(7)'>MERCATO</button>
+    <button class='tb' onclick='switchTab(8)'>MISSIONI</button>
+    <button class='tb' onclick='switchTab(9)'>ABILITA</button>
+    <button class='tb' onclick='switchTab(10)'>FAZIONI</button>
+  </div>
+  <div class='panel on' id='p0'>
+    <div class='narr-box'><div class='narr-tag'>SITUAZIONE</div><div class='narr-scroll'><div class='narr-text' id='narr'>Caricamento...</div></div></div>
+    <div class='slabel'>SCEGLI UN AZIONE</div>
+    <div class='cgrid' id='cgrid'><div class='empty'>Caricamento...</div></div>
+    <div class='slabel'>AZIONE LIBERA</div>
+    <div class='custwrap'>
+      <input class='custinp' id='custinp' type='text' placeholder='Cosa fa Mirko... (max 300 caratteri)' maxlength='300' onkeydown='if(event.key==="Enter")sendCustom()'>
+      <button class='sndbtn' id='sndbtn' onclick='sendCustom()'>INVIA</button>
     </div>
-    <div id="csec">
-      <div class="slabel">▸ SCEGLI UN'AZIONE</div>
-      <div class="cgrid" id="cgrid"></div>
-    </div>
-    <div class="slabel">▸ AZIONE PERSONALIZZATA</div>
-    <div class="custwrap">
-      <input class="custinp" id="custinp" type="text"
-             placeholder="Cosa fa Mirko..." maxlength="200"
-             onkeydown="if(event.key==='Enter')sendCustom()">
-      <button class="sndbtn" id="sndbtn" onclick="sendCustom()">INVIA</button>
-    </div>
-    <div class="loading" id="loading">
-      <span class="dot">●</span><span class="dot">●</span><span class="dot">●</span><br><br>
-      <span style="font-size:9px;letter-spacing:2px">LA CITTÀ DECIDE...</span>
+    <div class='loading' id='loading'>
+      <span class='dot'>*</span><span class='dot'>*</span><span class='dot'>*</span><br><br>
+      <span style='font-size:9px;letter-spacing:2px' id='loadmsg'>LA CITTA DECIDE...</span>
     </div>
     <hr>
-    <div class="slabel">▸ DIARIO</div>
-    <div class="logbox" id="logbox"></div>
+    <div class='slabel'>DIARIO</div>
+    <div class='logbox' id='logbox'></div>
   </div>
-
-  <!-- ── TAB STATS ── -->
-  <div class="panel" id="p-stats">
-    <div class="sgrid">
-      <div class="sbox"><div class="slb">SALUTE</div><div class="sval" id="sh">7/10</div><div class="bar"><div class="bf bh" id="bh" style="width:70%"></div></div></div>
-      <div class="sbox"><div class="slb">DENARO HK$</div><div class="sval" id="sm">12</div></div>
-      <div class="sbox"><div class="slb">REPUTAZIONE</div><div class="sval" id="sr">—</div><div class="bar"><div class="bf br" id="br" style="width:10%"></div></div></div>
-      <div class="sbox"><div class="slb">ISTRUZIONE</div><div class="sval" id="se">0/10</div></div>
+  <div class='panel' id='p1'>
+    <div class='sgrid'>
+      <div class='sbox'><div class='slb'>SALUTE</div><div class='sval' id='sh'>7/10</div><div class='bar'><div class='bf bh' id='bh' style='width:70%'></div></div></div>
+      <div class='sbox'><div class='slb'>DENARO HK$</div><div class='sval' id='sm'>12</div></div>
+      <div class='sbox'><div class='slb'>REPUTAZIONE</div><div class='sval' id='sr'>-</div><div class='bar'><div class='bf br' id='brp' style='width:0%'></div></div></div>
+      <div class='sbox'><div class='slb'>ISTRUZIONE</div><div class='sval' id='se'>0/10</div></div>
     </div>
-    <div class="sgrid">
-      <div class="sbox"><div class="slb">FORZA</div><div class="sval" id="sst">3/10</div></div>
-      <div class="sbox"><div class="slb">ASTUZIA</div><div class="sval" id="sw">5/10</div></div>
-      <div class="sbox"><div class="slb">FORTUNA</div><div class="sval" id="sl">5/10</div></div>
-      <div class="sbox"><div class="slb">CRIMINALITÀ</div><div class="sval" id="sc" style="color:var(--red)">0/10</div></div>
+    <div class='sgrid'>
+      <div class='sbox'><div class='slb'>FORZA</div><div class='sval' id='sst'>3/10</div></div>
+      <div class='sbox'><div class='slb'>ASTUZIA</div><div class='sval' id='sw'>4/10</div></div>
+      <div class='sbox'><div class='slb'>FORTUNA</div><div class='sval' id='sl'>5/10</div></div>
+      <div class='sbox'><div class='slb'>CRIMINALITA</div><div class='sval' id='sc2'>0/10</div></div>
     </div>
-    <br>
-    <div class="slabel">▸ ABILITÀ APPRESE</div>
-    <div class="sklist" id="sklist"><div class="empty">Nessuna abilità ancora.</div></div>
+    <br><div class='slabel'>ABILITA</div>
+    <div class='sklist' id='sklist'><div class='empty'>Nessuna abilita ancora.</div></div>
+    <br><div class='slabel'>STATO FISICO</div>
+    <div id='injuries-panel'><div class='empty'>Nessuna ferita.</div></div>
   </div>
-
-  <!-- ── TAB INVENTARIO ── -->
-  <div class="panel" id="p-inv">
-    <div class="slabel">▸ OGGETTI POSSEDUTI</div>
-    <div class="invg" id="invg"><div class="empty">Nessun oggetto.</div></div>
-    <hr>
-    <div class="slabel">▸ FLAGS / EVENTI CHIAVE</div>
-    <div id="flaglist" style="font-size:9px;color:var(--dim);line-height:2.1">—</div>
+  <div class='panel' id='p2'>
+    <div class='slabel'>OGGETTI</div><div class='invg' id='invg'><div class='empty'>Nessun oggetto.</div></div>
+    <hr><div class='slabel'>EVENTI CHIAVE</div><div id='flaglist' style='font-size:9px;color:var(--dim);line-height:2;'>-</div>
+    <hr><div class='slabel'>SALVATAGGIO</div>
+    <div style='display:flex;gap:8px;flex-wrap:wrap;'>
+      <button class='rbtn' onclick='openModal("export")'>ESPORTA</button>
+      <button class='dbtn' onclick='openModal("import")'>IMPORTA</button>
+    </div>
   </div>
-
-  <!-- ── TAB RELAZIONI ── -->
-  <div class="panel" id="p-rel">
-    <div class="slabel">▸ PERSONAGGI CONOSCIUTI</div>
-    <div class="rllist" id="rllist"><div class="empty">Nessun contatto ancora.</div></div>
+  <div class='panel' id='p3'><div class='slabel'>PERSONAGGI</div><div class='rllist' id='rllist'><div class='empty'>Nessun contatto.</div></div></div>
+  <div class='panel' id='p4'>
+    <div class='slabel'>MAPPA KOWLOON</div>
+    <div class='map-leg'>
+      <div class='ml'><div class='mld' style='background:#0a1a0a;border:1px solid var(--green)'></div>Tuo</div>
+      <div class='ml'><div class='mld' style='background:#1a0808;border:1px solid var(--red)'></div>14K</div>
+      <div class='ml'><div class='mld' style='background:#08081a;border:1px solid var(--blue)'></div>Sun Yee On</div>
+      <div class='ml'><div class='mld' style='background:#1a1008;border:1px solid var(--amb)'></div>Conteso</div>
+    </div>
+    <div class='map-grid' id='map-grid'></div>
   </div>
+  <div class='panel' id='p5'><div class='slabel'>KOWLOON GAZETTE</div><div id='news-list'><div class='empty'>Nessuna notizia.</div></div></div>
+  <div class='panel' id='p6'><div class='slabel'>DOSSIER PERSONAGGI</div><div id='dossier-list'></div></div>
+  <div class='panel' id='p7'>
+    <div class='slabel'>MERCATO NERO</div>
+    <div style='font-size:9px;color:var(--dim);margin-bottom:8px;'>Prezzi fluttuano ogni round.</div>
+    <div id='mkt-grid'></div>
+    <hr><div class='slabel'>VENDI OGGETTI</div>
+    <div id='sell-grid'><div class='empty'>Nessun oggetto vendibile.</div></div>
+  </div>
+  <div class='panel' id='p8'><div class='slabel'>OBIETTIVI ATTIVI</div><div id='quest-list'></div></div>
+  <div class='panel' id='p9'>
+    <div class='slabel'>PUNTI ABILITA</div>
+    <div id='skill-pts' style='font-family:Oswald,sans-serif;font-size:14px;color:var(--gold);margin-bottom:8px;'>0 pt</div>
+    <div class='slabel'>SPECIALIZZAZIONI</div>
+    <div id='skill-tree'></div>
+  </div>
+  <div class='panel' id='p10'>
+    <div class='slabel'>REPUTAZIONE FRAZIONARIA</div>
+    <div id='faction-list'></div>
+    <hr><div class='slabel'>CONTROLLO TERRITORIO</div>
+    <div id='faction-territory' style='font-size:9px;color:var(--dim);line-height:2;'></div>
+  </div>
+</div>
 
-</div><!-- /game -->
-</div><!-- /wrap -->
+<div class='modal' id='modal-talk'>
+  <div class='mbox'>
+    <div class='mtitle' id='talk-title'>CONVERSAZIONE</div>
+    <div class='mhint' id='talk-hint'></div>
+    <div id='talk-options' style='display:grid;gap:6px;'></div>
+    <div class='mbtns' style='margin-top:6px;'>
+      <button style='background:transparent;border:1px solid var(--dim);color:var(--dim);' onclick='closeModal("talk")'>CHIUDI</button>
+    </div>
+  </div>
+</div>
+<div class='modal' id='modal-export'>
+  <div class='mbox'>
+    <div class='mtitle'>ESPORTA SALVATAGGIO</div>
+    <div class='mhint'>Seleziona tutto e copia in Samsung Notes.</div>
+    <textarea class='mta' id='ta-export' readonly></textarea>
+    <div class='mbtns'>
+      <button style='background:var(--red);border:none;color:#fff;' onclick='document.getElementById("ta-export").select()'>SELEZIONA TUTTO</button>
+      <button style='background:transparent;border:1px solid var(--dim);color:var(--dim);' onclick='closeModal("export")'>CHIUDI</button>
+    </div>
+  </div>
+</div>
+<div class='modal' id='modal-import'>
+  <div class='mbox'>
+    <div class='mtitle'>IMPORTA SALVATAGGIO</div>
+    <div class='mhint'>Incolla il JSON e premi CARICA.</div>
+    <textarea class='mta' id='ta-import' placeholder='Incolla qui il JSON...'></textarea>
+    <div class='mbtns'>
+      <button style='background:var(--red);border:none;color:#fff;' onclick='doImport()'>CARICA</button>
+      <button style='background:transparent;border:1px solid var(--dim);color:var(--dim);' onclick='closeModal("import")'>ANNULLA</button>
+    </div>
+  </div>
+</div>
 
 <script>
-/* ═══════════════════════════════
-   STATE
-═══════════════════════════════ */
-const G = {
-  round:1, year:1979, sem:1, age:11,
-  health:7, money:12, rep:0, repLbl:'—',
-  edu:0, str:3, wit:5, luck:5, crim:0,
-  inv:[], skills:[], rel:{}, flags:[]
+var G={round:1,year:1969,sem:1,age:11,health:7,money:12,rep:0,repLbl:"Sconosciuto",edu:0,str:3,wit:4,luck:5,crim:0,inv:[],skills:[],rel:{},flags:[],injuries:[],territory:{},news:[],market:{},skillPts:0,unlockedSkills:[],factionRep:{k14:0,syeon:0,drago:0,polizia:0,civili:10}};
+var conv=[],busy=false,lastChoices=[];
+
+var MESI=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
+
+var REP_TIERS=[
+  {min:0,max:9,label:"Sconosciuto",cls:"rep-0"},
+  {min:10,max:24,label:"Faccia Conosciuta",cls:"rep-1"},
+  {min:25,max:44,label:"Il Meccanico",cls:"rep-1"},
+  {min:45,max:64,label:"Artigiano Ombra",cls:"rep-2"},
+  {min:65,max:79,label:"Uomo di Rispetto",cls:"rep-3"},
+  {min:80,max:89,label:"Boss del Blocco",cls:"rep-4"},
+  {min:90,max:100,label:"Signore della Citta",cls:"rep-5"}
+];
+function getRepTier(){for(var i=REP_TIERS.length-1;i>=0;i--)if(G.rep>=REP_TIERS[i].min)return REP_TIERS[i];return REP_TIERS[0];}
+
+var INJURIES_DB={
+  costola_incrinata:{label:"Costola Incrinata",type:"ferita",rounds:3,effect:"str-1"},
+  mano_rotta:{label:"Mano Rotta",type:"ferita",rounds:4,effect:"str-2"},
+  bruciatura:{label:"Bruciatura",type:"ferita",rounds:2,effect:"health-1"},
+  taglio_profondo:{label:"Taglio Profondo",type:"ferita",rounds:2,effect:"health-1"},
+  dengue:{label:"Dengue",type:"malattia",rounds:4,effect:"str-2 wit-1"},
+  polmonite:{label:"Polmonite",type:"malattia",rounds:5,effect:"health-1"},
+  intossicazione:{label:"Intossicazione",type:"malattia",rounds:2,effect:"wit-2"},
+  frattura_gamba:{label:"Frattura Gamba",type:"ferita",rounds:6,effect:"no combattimento"},
+  febbre_alta:{label:"Febbre Alta",type:"malattia",rounds:3,effect:"wit-2 str-1"}
 };
 
-let conv = [];   // conversation history for the API
-let busy = false;
+var MARKET_ITEMS=[
+  {id:"coltello",name:"Coltello da Combattimento",basePrice:25},
+  {id:"pistola",name:"Pistola (usata)",basePrice:300},
+  {id:"medicine",name:"Kit Medicinali",basePrice:40},
+  {id:"morfina",name:"Morfina (dosi)",basePrice:80},
+  {id:"radio",name:"Radio Portatile",basePrice:60},
+  {id:"arnesi",name:"Arnesi da Scasso",basePrice:45},
+  {id:"esplosivi",name:"Esplosivi Artigianali",basePrice:150},
+  {id:"documenti",name:"Documenti Falsi",basePrice:200}
+];
+function getMarketPrice(item){return Math.round(item.basePrice*(G.market[item.id]||1.0));}
+function initMarket(){MARKET_ITEMS.forEach(function(item){if(!G.market[item.id])G.market[item.id]=0.7+Math.random()*0.6;});}
+function fluctuateMarket(){MARKET_ITEMS.forEach(function(item){G.market[item.id]=Math.max(0.4,Math.min(2.0,(G.market[item.id]||1.0)+(Math.random()-0.5)*0.2));});}
 
-/* ═══════════════════════════════
-   SYSTEM PROMPT
-   Key change: we tell the model to NEVER use apostrophes inside
-   JSON string values — use the unicode alternative or rephrase.
-   Also instruct it to escape properly.
-═══════════════════════════════ */
-const SYS = `Sei il Game Master di un GDR di sopravvivenza ambientato nella Kowloon Walled City di Hong Kong.
-
-PERSONAGGIO: MIRKO, nato 1968, italo-cinese. Gioco inizia 1979 (11 anni). Ogni round = 6 mesi.
-
-CONTESTO STORICO:
-- 0,026 km2, ~50.000 abitanti, densita record mondiale
-- Nessuna polizia entrava. Triadi: 14K, Sun Yee On
-- Fabbriche illegali, dentisti abusivi, ristoranti sul tetto
-- Corridoi bui, umidi, cavi elettrici ovunque
-
-PERSONAGGI (falli evolvere con memoria degli eventi):
-Benny Lam, Uncle Caruso, Sorella Mei, Boss Fong, Mr. Chan, Dragon
-
-EVENTI DINAMICI (0-1 per round, non sempre):
-Raid polizia ai confini, incendio corridoio, blackout totale, epidemia dengue, guerra tra fazioni Triade, nuovo misterioso abitante, demolizione piano, sequestro droga, mahjong clandestino, giornalisti stranieri.
-
-REGOLA CRITICA JSON:
-- Rispondi SOLO con JSON valido, nessun testo fuori
-- NON usare apostrofi (') dentro le stringhe JSON: scrivi "non e" invece di "non e'" oppure usa la forma completa senza contrazione
-- NON usare virgolette doppie (") dentro le stringhe JSON, usa solo parole o parafrasa
-- Tutti i valori stringa devono essere compatibili con JSON.parse() standard
-
-FORMATO RISPOSTA - solo questo JSON, nessun altro testo:
-{
-  "narrative": "testo 220-350 parole, seconda persona, italiano, tono crudo cinematografico, SENZA apostrofi nelle contrazioni come dell apostrofo o nell apostrofo",
-  "dynamic_event": null,
-  "sc": {"health":0,"money":0,"rep":0,"rep_label":"","edu":0,"str":0,"wit":0,"luck":0,"crim":0},
-  "inv_add": [{"icon":"emoji","name":"nome oggetto"}],
-  "inv_rem": ["nome"],
-  "sk_add":  [{"name":"nome skill","level":1}],
-  "sk_upd":  [{"name":"nome","level":2}],
-  "rel_upd": {"NomePersonaggio":{"status":"amico","desc":"descrizione breve"}},
-  "flags":   ["flag evento"],
-  "choices": [
-    {"text":"azione concreta","risk":"alto"},
-    {"text":"azione concreta","risk":"medio"},
-    {"text":"azione concreta","risk":"basso"}
-  ]
+var MAP_ROWS=["A","B","C","D","E","F","G"],MAP_COLS=[1,2,3,4,5,6,7];
+function initMap(){
+  if(Object.keys(G.territory).length>0)return;
+  MAP_ROWS.forEach(function(r,ri){MAP_COLS.forEach(function(c){
+    var z=r+c;
+    G.territory[z]=ri<2?"k14":ri>4?"syeon":ri===3&&c===4?"owned":"neutral";
+  });});
 }
 
-status valori: amico, neutro, nemico, alleato
-Se dynamic_event non esiste: null
-Liste vuote se non ci sono cambiamenti: []`;
-
-/* ═══════════════════════════════
-   START
-═══════════════════════════════ */
-function startGame() {
-  document.getElementById('intro').style.display = 'none';
-  document.getElementById('game').style.display  = 'block';
-  conv = [{
-    role:'user',
-    content:'Inizia la partita. Round 1, gennaio 1979, Mirko 11 anni. Descrivi la sua situazione e le prime scelte. Ricorda: SOLO JSON valido, nessun apostrofo nelle stringhe.'
-  }];
-  callAI();
+var TIMELINE=[
+  {year:1967,label:"Rivolta",desc:"Rivolta di sinistra. Bombe artigianali per le strade."},
+  {year:1974,label:"ICAC",desc:"Commissione anti-corruzione. Polizia meno corruttibile."},
+  {year:1984,label:"Dichiar.",desc:"UK e Cina firmano dichiarazione congiunta. Conto alla rovescia."},
+  {year:1987,label:"Demol.",desc:"Annuncio demolizione Walled City. 33.000 abitanti da spostare."},
+  {year:1993,label:"Sgombero",desc:"Inizio demolizione. Fine di un mondo."},
+  {year:1997,label:"Handover",desc:"Hong Kong torna alla Cina."}
+];
+function renderTimeline(){
+  var t=document.getElementById("tl-track");if(!t)return;
+  var minY=1967,maxY=1997,range=maxY-minY;
+  var pct=Math.max(0,Math.min(100,((G.year-minY)/range)*100));
+  t.innerHTML="";
+  var line=document.createElement("div");line.className="tl-line";t.appendChild(line);
+  var prog=document.createElement("div");prog.className="tl-prog";prog.style.width=pct+"%";t.appendChild(prog);
+  TIMELINE.forEach(function(ev){
+    var p=Math.max(0,Math.min(100,((ev.year-minY)/range)*100));
+    var cls=ev.year<G.year?"past":ev.year===G.year?"now":"";
+    var dot=document.createElement("div");
+    dot.className=cls?"tl-dot "+cls:"tl-dot";
+    dot.style.left=p+"%";
+    dot.title=String(ev.year)+": "+ev.desc;
+    var lbl=document.createElement("div");
+    lbl.className=cls?"tl-lbl "+cls:"tl-lbl";
+    lbl.style.left=p+"%";
+    lbl.textContent=ev.label;
+    var yr=document.createElement("div");
+    yr.className="tl-yr";
+    yr.style.left=p+"%";
+    yr.textContent=String(ev.year);
+    t.appendChild(dot);t.appendChild(lbl);t.appendChild(yr);
+  });
 }
 
-/* ═══════════════════════════════
-   API CALL — with robust JSON extraction
-═══════════════════════════════ */
-async function callAI() {
-  if (busy) return;
-  busy = true;
-  setLoad(true);
+var WEATHER=[
+  {months:[11,0],icon:"[FREDDO]",txt:"Freddo Secco",effect:"Lavori pesanti: health-1",color:"#5dade2"},
+  {months:[1,2],icon:"[VENTO]",txt:"Vento di Primavera",effect:"Nessun effetto",color:"var(--text)"},
+  {months:[3,4],icon:"[PIOGGIA]",txt:"Piogge Primaverili",effect:"Mobilita ridotta",color:"#85c1e9"},
+  {months:[5,6],icon:"[CALDO]",txt:"Caldo Umido",effect:"Lavori pesanti: health-1",color:"var(--amb)"},
+  {months:[7,8],icon:"[TIFONE]",txt:"Stagione Tifoni",effect:"Attivita esterne bloccate",color:"var(--red)"},
+  {months:[9,10],icon:"[SECCO]",txt:"Autunno Secco",effect:"Condizioni ottimali",color:"var(--green)"}
+];
+function getCurrentWeather(){var mi=(G.round-1)%12;for(var i=0;i<WEATHER.length;i++)if(WEATHER[i].months.indexOf(mi)>=0)return WEATHER[i];return WEATHER[0];}
+function renderWeather(){var w=getCurrentWeather();var wi=document.getElementById("weather-icon"),wt=document.getElementById("weather-txt"),we=document.getElementById("weather-effect");if(!wi)return;wi.textContent=w.icon;wt.textContent=w.txt;wt.style.color=w.color;we.textContent=w.effect;}
 
-  try {
-    // Su HTTPS (GitHub Pages) il fetch diretto funziona senza CORS
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1400,
-        system: SYS,
-        messages: conv
-      })
+var NPC_DATA={
+  "Benny Lam":{role:"Runner Triadi",bio:"Coetaneo di Mirko. Ambizioso, impulsivo, leale a modo suo.",motivazioni:"Soldi veloci, rispetto.",tags:["Complice","Informatore"],topicsFn:function(){return["Lavori triadi disponibili","Dove si trovano i boss 14K","Voci sul mercato nero","Chiedi un favore"];}},
+  "Uncle Caruso":{role:"Meccanico Italiano",bio:"Campano, arrivato a Hong Kong negli anni 50. Officina clandestina. Figura paterna.",motivazioni:"Sopravvivere, tenere aperta l officina.",tags:["Mentore","Meccanico"],topicsFn:function(){return["Lavoro in officina","Come riparare strumenti","Consiglio sulla vita","Informazioni contrabbandieri"];}},
+  "Sorella Mei":{role:"Infermiera Abusiva",bio:"Clinica illegale al piano 4. Cura ferite senza fare domande.",motivazioni:"Aiutare i poveri, tenere la clinica aperta.",tags:["Medico","Alleata"],topicsFn:function(){return["Curati da una ferita (+health)","Compra medicine","Informazioni sui feriti","Chiedi di qualcuno"];}},
+  "Boss Fong":{role:"Capo 14K",bio:"Controlla meta della Walled City. Pragmatico, violento quando serve.",motivazioni:"Espandere territorio 14K.",tags:["Pericoloso","Influente"],topicsFn:function(){return["Chiedi un lavoro","Paga protezione","Offri informazioni sulla Sun Yee On","Negozia territorio"];}},
+  "Mr. Chan":{role:"Insegnante Clandestino",bio:"Ex professore universitario. Scuola illegale in un sottoscala.",motivazioni:"Educare i giovani, resistere alla corruzione.",tags:["Mentore","Istruzione"],topicsFn:function(){return["Lezione privata (+edu)","Informazioni sul mondo esterno","Documenti falsi","Notizie politiche"];}},
+  "Dragon":{role:"Lottatore Muay Thai",bio:"Ex militare tailandese. Allena i ragazzi della Citta. Silenzioso e disciplinato.",motivazioni:"La disciplina come via di salvezza.",tags:["Maestro","Combattente"],topicsFn:function(){return["Allenamento intensivo (+str)","Iscriviti a un combattimento","Info sui lottatori","Sfida un avversario"];}}
+};
+function talkToNPC(nm){
+  var npc=NPC_DATA[nm];if(!npc)return;
+  var topics=npc.topicsFn();
+  document.getElementById("talk-title").textContent="PARLA CON "+nm.toUpperCase();
+  document.getElementById("talk-hint").textContent=npc.bio.slice(0,80)+"...";
+  var cont=document.getElementById("talk-options");cont.innerHTML="";
+  topics.forEach(function(t){
+    var btn=document.createElement("button");
+    btn.style.cssText="background:var(--mid);border:1px solid var(--bdr);color:var(--text);font-family:Share Tech Mono,monospace;font-size:11px;padding:10px 12px;cursor:pointer;text-align:left;width:100%;";
+    btn.textContent=t;
+    btn.onclick=(function(topic,name){return function(){closeModal("talk");choose("Parlo con "+name+": "+topic);};})(t,nm);
+    cont.appendChild(btn);
+  });
+  openModal("talk");
+}
+
+var QUESTS=[
+  {id:"find_father",name:"Trova Tuo Padre",desc:"Enzo Lam, sparito nel 1971. Qualcuno sa qualcosa.",steps:[{text:"Chiedi a Caruso del passato",flag:"caruso_lavoro"},{text:"Scopri la storia del padre",flag:"storia_padre_rivelata"},{text:"Trova chi sa cosa e successo",flag:"padre_enzo_meccanico_napoletano"},{text:"Scopri il destino definitivo",flag:"padre_destino_scoperto"}],flags_complete:["padre_destino_scoperto"]},
+  {id:"mongkok",name:"Controlla Mong Kok",desc:"Espandi la tua influenza fuori dalla Walled City.",steps:[{text:"Apri una attivita a Mong Kok",flag:"officina_mongkok_aperta"},{text:"Fondazione gang",flag:"drago_verde_gang_fondata"},{text:"Elimina la concorrenza",flag:"guerra_14k_aperta"},{text:"Controlla il territorio",flag:"mongkok_controllato"}],flags_complete:["mongkok_controllato"]},
+  {id:"escape",name:"Esci dalla Walled City",desc:"Costruisci qualcosa di legale e fuggi.",steps:[{text:"Accumula HK$50000",flag:null,checkFn:function(){return G.money>=50000;}},{text:"Ottieni copertura legale",flag:"drago_verde_legale"},{text:"Base fuori dalla Citta",flag:"caruso_engineering_attiva"},{text:"Completa la transizione",flag:"uscita_completata"}],flags_complete:["uscita_completata"]},
+  {id:"boss",name:"Signore della Citta",desc:"Diventa il padrone assoluto della Walled City.",steps:[{text:"Controlla 10+ zone",flag:null,checkFn:function(){var cnt=0;Object.keys(G.territory).forEach(function(k){if(G.territory[k]==="owned")cnt++;});return cnt>=10;}},{text:"Rep >= 80",flag:null,checkFn:function(){return G.rep>=80;}},{text:"Elimina i boss rivali",flag:"guerra_14k_aperta"},{text:"Rivendica il titolo",flag:"signore_della_citta"}],flags_complete:["signore_della_citta"]}
+];
+function getQuestProg(q){var done=0;q.steps.forEach(function(s){if(s.flag&&G.flags.indexOf(s.flag)>=0)done++;else if(!s.flag&&s.checkFn&&s.checkFn())done++;});return{done:done,total:q.steps.length,pct:Math.round((done/q.steps.length)*100)};}
+
+var SKILL_BRANCHES=[
+  {id:"arm",name:"Armaiolo Esperto",color:"var(--red)",nodes:[{id:"arm1",name:"Riparazione Avanzata",cost:2,desc:"Ripara qualsiasi arma. +500 HK$ per commissione.",req:null},{id:"arm2",name:"Modifiche Custom",cost:3,desc:"Modifica armi per triadi.",req:"arm1"},{id:"arm3",name:"Costruzione Armi",cost:4,desc:"Costruisci armi dal nulla.",req:"arm2"}]},
+  {id:"comb",name:"Combattente Letale",color:"var(--amb)",nodes:[{id:"comb1",name:"Muay Thai Avanzato",cost:2,desc:"+2 forza in combattimento.",req:null},{id:"comb2",name:"Combattente da Ring",cost:3,desc:"Tornei premium. +400 HK$ per vittoria.",req:"comb1"},{id:"comb3",name:"Assassino",cost:5,desc:"Elimina bersagli in silenzio.",req:"comb2"}]},
+  {id:"fix",name:"Fixer delle Triadi",color:"#9b59b6",nodes:[{id:"fix1",name:"Intermediario",cost:2,desc:"Gestisci affari tra fazioni.",req:null},{id:"fix2",name:"Uomo di Fiducia",cost:3,desc:"Accesso a livelli superiori 14K.",req:"fix1"},{id:"fix3",name:"Consigliere",cost:5,desc:"Influenza le decisioni dei boss.",req:"fix2"}]},
+  {id:"mec",name:"Mastro Meccanico",color:"var(--green)",nodes:[{id:"mec1",name:"Elettricista Esperto",cost:2,desc:"Impianti clandestini. +300 HK$ passivi.",req:null},{id:"mec2",name:"Ingegnere Industriale",cost:3,desc:"Fabbriche clandestine. +600 HK$.",req:"mec1"},{id:"mec3",name:"Imprenditore Ombra",cost:4,desc:"3+ attivita. +1200 HK$ per round.",req:"mec2"}]}
+];
+function unlockSkill(id,cost){
+  if((G.skillPts||0)<cost){alert("Punti insufficienti.");return;}
+  G.unlockedSkills=G.unlockedSkills||[];
+  if(G.unlockedSkills.indexOf(id)>=0)return;
+  G.unlockedSkills.push(id);G.skillPts=(G.skillPts||0)-cost;
+  addLog("[ABILITA] Sbloccata: "+id,true);renderUI();
+}
+
+var FACTIONS=[
+  {id:"k14",name:"Triadi 14K",color:"var(--red)"},
+  {id:"syeon",name:"Sun Yee On",color:"var(--blue)"},
+  {id:"drago",name:"Drago Verde",color:"var(--green)"},
+  {id:"polizia",name:"Polizia HK",color:"#95a5a6"},
+  {id:"civili",name:"Civili",color:"var(--text)"}
+];
+
+function factionTick(){
+  var zones=Object.keys(G.territory);if(!zones.length)return;
+  if(Math.random()<0.2){
+    var z=zones[Math.floor(Math.random()*zones.length)];
+    var cur=G.territory[z];
+    if(cur==="neutral")G.territory[z]=Math.random()<0.5?"k14":"syeon";
+    else if((cur==="k14"||cur==="syeon")&&Math.random()<0.3)G.territory[z]="contested";
+    else if(cur==="contested")G.territory[z]=Math.random()<0.5?"k14":"syeon";
+  }
+}
+function earnSkillPoints(){
+  if(G.round%3===0){var pts=Math.floor(G.edu/3)+1;G.skillPts=(G.skillPts||0)+pts;if(pts>0)addLog("[ABILITA] +"+pts+" punti",false);}
+}
+
+function buildSys(){
+  var inv=G.inv.map(function(i){return i.name;}).join(", ")||"vuoto";
+  var sk=G.skills.map(function(s){return s.name+" lv"+s.level;}).join(", ")||"nessuna";
+  var rel=Object.keys(G.rel).map(function(n){return n+":"+G.rel[n].status;}).join(", ")||"nessuna";
+  var inj=G.injuries.map(function(i){return i.label+"("+i.rounds+"r)";}).join(", ")||"nessuna";
+  var tier=getRepTier();
+  var mi=(G.round-1)%12;
+  var fRep=G.factionRep||{};
+  return "Sei il Game Master di un GDR nella Kowloon Walled City. Ogni round = 2 MESI.\n"+
+    "MONDO: 50.000 abitanti, 0,026 km2. Nessuna polizia. Triadi 14K e Sun Yee On. Periodo 1969-1984.\n"+
+    "PERSONAGGI: Benny Lam complice, Uncle Caruso meccanico mentore, Sorella Mei infermiera, Boss Fong capo 14K, Mr. Chan insegnante, Dragon maestro Muay Thai.\n\n"+
+    "STATO MIRKO:\n"+
+    "eta:"+G.age+" anno:"+G.year+" mese:"+MESI[mi]+" round:"+G.round+"\n"+
+    "salute:"+G.health+"/10 denaro:HK$"+G.money+"\n"+
+    "rep:"+G.repLbl+"("+G.rep+"/100) tier:"+tier.label+"\n"+
+    "istruzione:"+G.edu+"/10 forza:"+G.str+"/10 astuzia:"+G.wit+"/10 fortuna:"+G.luck+"/10 crim:"+G.crim+"/10\n"+
+    "inv:"+inv+"\nabilita:"+sk+"\nrel:"+rel+"\nferite:"+inj+"\n"+
+    "rep14K:+"+(fRep.k14||0)+" repSYO:"+(fRep.syeon||0)+" repCivili:"+(fRep.civili||0)+"\n"+
+    "flags:"+G.flags.slice(-8).join(",")+"\n\n"+
+    "REGOLA sc: DELTA. Min 3 campi. Round=2MESI. Officina=+400$,str1 | Triadi=+270$,crim1 | Combatti=+200$,health-1 | Studia=edu1 | Colpo=+1000$,crim2.\n"+
+    "RISCHIO: BASSO=ok. MEDIO=60% ok. ALTO=40% ok 20% catastrofico. Mirko muore se health<=0.\n"+
+    "FERITE: injuries_add:[id] per aggiungere (costola_incrinata,dengue,mano_rotta,frattura_gamba,febbre_alta,bruciatura).\n"+
+    "TERRITORIO: territory_upd:{zona:owner} (owner: owned/k14/syeon/neutral/contested).\n"+
+    "NEWS: news_add:{title:t,body:b} se succede qualcosa di rilevante.\n"+
+    "FAZIONI: faction_rep_upd:{k14:delta,syeon:delta,drago:delta,civili:delta}.\n"+
+    "POLIZIA: se crim>=5, 15% probabilita raid. Raid: health-3,money-500 o fuga health-1.\n"+
+    "STAGIONI: Gen-Feb=freddo, Lug-Ago=caldo, Ott=tifone, Dic=feste cinesi.\n"+
+    "Choices: 3 NUOVE e specifiche, mai ripetute.\n"+
+    "SOLO JSON. Niente backtick. Niente apostrofi nelle stringhe.\n"+
+    'SCHEMA: {"narrative":"180-240 parole seconda persona italiano crudo","dynamic_event":null,"sc":{"health":0,"money":0,"rep":0,"rep_label":"","edu":0,"str":0,"wit":0,"luck":0,"crim":0},"inv_add":[{"icon":"[X]","name":"n"}],"inv_rem":["n"],"sk_add":[{"name":"n","level":1}],"sk_upd":[{"name":"n","level":2}],"rel_upd":{"Nome":{"status":"s","desc":"d","trust":50}},"flags":["f"],"injuries_add":["id"],"injuries_rem":["id"],"territory_upd":{"A1":"owner"},"news_add":{"title":"t","body":"b"},"faction_rep_upd":{"k14":0,"syeon":0,"drago":0,"civili":0},"choices":[{"text":"a1","risk":"alto"},{"text":"a2","risk":"medio"},{"text":"a3","risk":"basso"}]}';
+}
+
+function parseJSON(raw){
+  if(!raw)return null;
+  var BT=String.fromCharCode(96);var s=raw.replace(new RegExp(BT+"{1,3}(?:json)?\\s*","gi"),"").replace(new RegExp(BT+"{1,3}","g"),"").trim();
+  try{return JSON.parse(s);}catch(e){}
+  var a=s.indexOf("{"),b=s.lastIndexOf("}");
+  if(a<0||b<=a)return null;
+  s=s.slice(a,b+1);
+  try{return JSON.parse(s);}catch(e){}
+  try{
+    var san=s.replace(new RegExp("(Q((?:[^Q\\\\]|\\\\.)*)Q)".replace(/Q/g,'"'),"g"),function(_,full,inn){
+      return '"'+inn.replace(/\n/g," ").replace(/\r/g,"")+'"';
     });
-
-    if (!res.ok) {
-      const err = await res.text();
-      throw new Error('HTTP ' + res.status + ': ' + err);
-    }
-
-    const data = await res.json();
-    const raw = (data.content || []).map(b => b.text || '').join('');
-    conv.push({ role:'assistant', content: raw });
-
-    const parsed = safeParseJSON(raw);
-    applyParsed(parsed);
-
-  } catch(e) {
-    console.error('[callAI]', e);
-    document.getElementById('narr').textContent =
-      'Errore: ' + e.message + '\n\nRicarica la pagina e riprova.';
-  }
-
-  setLoad(false);
-  busy = false;
+    return JSON.parse(san);
+  }catch(e){}
+  var result={narrative:"",dynamic_event:null,sc:{},inv_add:[],inv_rem:[],sk_add:[],sk_upd:[],rel_upd:{},flags:[],choices:[]};
+  var QQ='"';
+  var nm=raw.match(new RegExp(QQ+"narrative"+QQ+"\\s*:\\s*"+QQ+"((?:[^"+QQ+"\\\\]|\\\\.)*)"+ QQ));
+  if(nm)result.narrative=nm[1].replace(/\\n/g," ");
+  ["health","money","rep","edu","str","wit","luck","crim"].forEach(function(k){
+    var m=raw.match(new RegExp(QQ+k+QQ+"\\s*:\\s*(-?\\d+)"));
+    if(m)result.sc[k]=parseInt(m[1],10);
+  });
+  var rl=raw.match(new RegExp(QQ+"rep_label"+QQ+"\\s*:\\s*"+QQ+"([^"+QQ+"]*)"+ QQ));
+  if(rl)result.sc.rep_label=rl[1];
+  var cm=raw.match(new RegExp(QQ+"choices"+QQ+"\\s*:\\s*(\\[[\\s\\S]*?\\])"));
+  if(cm)try{result.choices=JSON.parse(cm[1]);}catch(e){}
+  if(result.narrative||Object.keys(result.sc).length>0)return result;
+  return null;
 }
 
-/* ═══════════════════════════════
-   ROBUST JSON PARSER
-   Tries multiple strategies before giving up
-═══════════════════════════════ */
-function safeParseJSON(raw) {
-  // Strategy 1: strip markdown fences, parse directly
-  let s = raw.replace(/^```(?:json)?/gm,'').replace(/```$/gm,'').trim();
-  try { return JSON.parse(s); } catch(_) {}
-
-  // Strategy 2: extract first { ... } block (greedy from last })
-  const start = s.indexOf('{');
-  const end   = s.lastIndexOf('}');
-  if (start !== -1 && end !== -1) {
-    let sub = s.slice(start, end + 1);
-    try { return JSON.parse(sub); } catch(_) {}
-
-    // Strategy 3: fix common issues – unescaped apostrophes inside strings
-    // Replace ' that appear inside JSON string values with a safe char
-    let fixed = sub.replace(/"([^"\\]*)"/g, (match, inner) => {
-      // inside the string, replace lone apostrophes
-      const cleaned = inner.replace(/'/g, '\u2019'); // curly apostrophe, safe in JSON
-      return '"' + cleaned + '"';
-    });
-    try { return JSON.parse(fixed); } catch(_) {}
-
-    // Strategy 4: more aggressive – remove everything after last valid comma
-    // and re-close the object (for truncated responses)
-    try {
-      // find last complete key-value before error
-      const truncated = sub.replace(/,\s*"[^"]*"\s*:\s*[^,}\]]*$/, '') + '}';
-      return JSON.parse(truncated);
-    } catch(_) {}
-  }
-
-  // Fallback: return structure with raw text as narrative
-  console.warn('[safeParseJSON] All strategies failed, raw:', raw);
-  return {
-    narrative: raw.length > 20 ? raw.replace(/[{}[\]"]/g,'') : 'Risposta non valida. Riprova.',
-    dynamic_event: null, sc:{}, inv_add:[], inv_rem:[],
-    sk_add:[], sk_upd:[], rel_upd:{}, flags:[], choices:[]
-  };
+function callAI(retries){
+  if(retries===undefined)retries=2;
+  if(busy)return;
+  busy=true;setLoad(true);
+  var last=conv[conv.length-1];
+  fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",headers:{"Content-Type":"application/json","x-api-key":"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","anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-calls":"true"},
+    body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:2500,system:buildSys(),messages:[last]})
+  }).then(function(res){
+    if(res.status===429&&retries>0){document.getElementById("loadmsg").textContent="Rate limit - riprovo...";setTimeout(function(){busy=false;callAI(retries-1);},8000);return null;}
+    if(!res.ok)throw new Error("HTTP "+res.status);
+    return res.json();
+  }).then(function(data){
+    if(!data)return;
+    var raw=(data.content||[]).map(function(b){return b.text||"";}).join("");
+    var parsed=parseJSON(raw);
+    if(parsed){applyParsed(parsed);}
+    else{document.getElementById("narr").textContent="Risposta non valida. Scrivi un azione libera.";if(lastChoices.length)renderChoices(lastChoices);}
+    busy=false;setLoad(false);
+  }).catch(function(e){
+    document.getElementById("narr").textContent="Errore: "+e.message;
+    if(lastChoices.length)renderChoices(lastChoices);
+    busy=false;setLoad(false);
+  });
 }
 
-/* ═══════════════════════════════
-   APPLY PARSED RESPONSE
-═══════════════════════════════ */
-function applyParsed(p) {
-  // Narrative
-  document.getElementById('narr').innerHTML = fmtNarr(p.narrative || '—');
-
-  // Dynamic event banner
-  if (p.dynamic_event && p.dynamic_event.title) {
-    document.getElementById('evtext').innerHTML =
-      '<strong>' + esc(p.dynamic_event.title) + ':</strong> ' + esc(p.dynamic_event.desc || '');
-    const b = document.getElementById('evbanner');
-    b.classList.add('on');
-    setTimeout(() => b.classList.remove('on'), 15000);
+function sgn(v){var r=v>0?"+":"";return r;}
+function applyParsed(p){
+  document.getElementById("narr").innerHTML=fmtNarr(p.narrative||"-");
+  if(p.dynamic_event&&p.dynamic_event.title){
+    document.getElementById("evtext").innerHTML="<strong>"+esc(p.dynamic_event.title)+":</strong> "+esc(p.dynamic_event.desc||"");
+    var b=document.getElementById("evbanner");b.classList.add("on");setTimeout(function(){b.classList.remove("on");},14000);
   }
-
-  // Stats
-  const sc = p.sc || {};
-  const cl = (v,lo,hi) => Math.max(lo, Math.min(hi, v));
-  G.health = cl(G.health + (sc.health|0), 0, 10);
-  G.money  = Math.max(0, G.money + (sc.money|0));
-  G.rep    = cl(G.rep   + (sc.rep|0),    0, 100);
-  G.edu    = cl(G.edu   + (sc.edu|0),    0, 10);
-  G.str    = cl(G.str   + (sc.str|0),    0, 10);
-  G.wit    = cl(G.wit   + (sc.wit|0),    0, 10);
-  G.luck   = cl(G.luck  + (sc.luck|0),   0, 10);
-  G.crim   = cl(G.crim  + (sc.crim|0),   0, 10);
-  if (sc.rep_label && String(sc.rep_label).trim()) G.repLbl = sc.rep_label;
-
-  // Inventory
-  (p.inv_add || []).forEach(it => {
-    if (it && it.name && !G.inv.find(x=>x.name===it.name))
-      G.inv.push({icon:it.icon||'📦', name:it.name});
-  });
-  (p.inv_rem || []).forEach(nm => { G.inv = G.inv.filter(x=>x.name!==nm); });
-
-  // Skills
-  (p.sk_add || []).forEach(sk => {
-    if (sk && sk.name && !G.skills.find(x=>x.name===sk.name))
-      G.skills.push({name:sk.name, level:Math.min(5, (sk.level|0)||1)});
-  });
-  (p.sk_upd || []).forEach(sk => {
-    if (!sk || !sk.name) return;
-    const ex = G.skills.find(x=>x.name===sk.name);
-    if (ex) ex.level = Math.min(5, (sk.level|0)||ex.level);
-    else G.skills.push({name:sk.name, level:Math.min(5,(sk.level|0)||1)});
-  });
-
-  // Relations
-  if (p.rel_upd && typeof p.rel_upd === 'object') {
-    Object.entries(p.rel_upd).forEach(([nm,d]) => { if(nm&&d) G.rel[nm]=d; });
-  }
-
-  // Flags
-  (p.flags || []).filter(Boolean).forEach(f => { if(!G.flags.includes(f)) G.flags.push(f); });
-
-  // Choices
-  renderChoices(Array.isArray(p.choices) ? p.choices.filter(Boolean) : []);
-
-  renderUI();
+  var sc=p.sc||{};
+  function nd(k){return Math.round(Number(sc[k])||0);}
+  function cl(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+  var dh=nd("health"),dm=nd("money"),dr=nd("rep"),de=nd("edu"),ds=nd("str"),dw=nd("wit"),dl=nd("luck"),dc=nd("crim");
+  G.health=cl(G.health+dh,0,10);G.money=Math.max(0,G.money+dm);G.rep=cl(G.rep+dr,0,100);
+  G.edu=cl(G.edu+de,0,10);G.str=cl(G.str+ds,0,10);G.wit=cl(G.wit+dw,0,10);
+  G.luck=cl(G.luck+dl,0,10);G.crim=cl(G.crim+dc,0,10);
+  var tier=getRepTier();G.repLbl=tier.label;
+  if(sc.rep_label&&String(sc.rep_label).trim())G.repLbl=sc.rep_label;
+  var pts=[];
+  if(dh)pts.push(sgn(dh)+dh+" sal");
+  if(dm)pts.push(sgn(dm)+dm+" HK$");
+  if(dr)pts.push(sgn(dr)+dr+" rep");
+  if(de)pts.push(sgn(de)+de+" edu");
+  if(ds)pts.push(sgn(ds)+ds+" str");
+  if(dw)pts.push(sgn(dw)+dw+" wit");
+  if(dl)pts.push(sgn(dl)+dl+" luck");
+  if(dc)pts.push(sgn(dc)+dc+" crim");
+  if(pts.length)addLog(">> "+pts.join(" | "),true);
+  (p.inv_add||[]).forEach(function(it){if(it&&it.name&&!G.inv.find(function(x){return x.name===it.name;}))G.inv.push({icon:it.icon||"[?]",name:it.name});});
+  (p.inv_rem||[]).forEach(function(nm){G.inv=G.inv.filter(function(x){return x.name!==nm;});});
+  (p.sk_add||[]).forEach(function(sk){if(sk&&sk.name&&!G.skills.find(function(x){return x.name===sk.name;}))G.skills.push({name:sk.name,level:Math.min(5,(sk.level|0)||1)});});
+  (p.sk_upd||[]).forEach(function(sk){if(!sk||!sk.name)return;var ex=G.skills.find(function(x){return x.name===sk.name;});if(ex)ex.level=Math.min(5,(sk.level|0)||ex.level);else G.skills.push({name:sk.name,level:Math.min(5,(sk.level|0)||1)});});
+  if(p.rel_upd&&typeof p.rel_upd==="object")Object.keys(p.rel_upd).forEach(function(nm){if(nm&&p.rel_upd[nm]){G.rel[nm]=G.rel[nm]||{};G.rel[nm].status=p.rel_upd[nm].status||G.rel[nm].status||"neutro";G.rel[nm].desc=p.rel_upd[nm].desc||G.rel[nm].desc||"";if(p.rel_upd[nm].trust!==undefined)G.rel[nm].trust=Math.max(0,Math.min(100,Number(p.rel_upd[nm].trust)||50));}});
+  (p.flags||[]).filter(Boolean).forEach(function(f){if(G.flags.indexOf(f)<0)G.flags.push(f);});
+  (p.injuries_add||[]).forEach(function(id){if(id&&INJURIES_DB[id]&&!G.injuries.find(function(x){return x.id===id;})){var inj=JSON.parse(JSON.stringify(INJURIES_DB[id]));inj.id=id;G.injuries.push(inj);addLog("[FERITA] "+inj.label,false);}});
+  (p.injuries_rem||[]).forEach(function(id){G.injuries=G.injuries.filter(function(x){return x.id!==id;});});
+  G.injuries=G.injuries.map(function(inj){inj.rounds--;return inj;}).filter(function(inj){if(inj.rounds<=0){addLog("[GUARITO] "+inj.label,false);return false;}return true;});
+  if(p.territory_upd&&typeof p.territory_upd==="object")Object.keys(p.territory_upd).forEach(function(z){G.territory[z]=p.territory_upd[z];});
+  if(p.news_add&&p.news_add.title){G.news.unshift({date:G.year+" "+MESI[(G.round-1)%12],title:p.news_add.title,body:p.news_add.body||""});if(G.news.length>20)G.news=G.news.slice(0,20);}
+  if(p.faction_rep_upd&&typeof p.faction_rep_upd==="object"){if(!G.factionRep)G.factionRep={k14:0,syeon:0,drago:0,polizia:0,civili:10};Object.keys(p.faction_rep_upd).forEach(function(f){if(typeof p.faction_rep_upd[f]==="number")G.factionRep[f]=Math.max(0,Math.min(100,(G.factionRep[f]||0)+p.faction_rep_upd[f]));});}
+  fluctuateMarket();factionTick();earnSkillPoints();
+  var ch=(p.choices||[]).filter(function(c){return c&&c.text;});
+  if(ch.length)lastChoices=ch;
+  renderChoices(lastChoices);renderUI();autoSave();
 }
 
-/* ═══════════════════════════════
-   CHOICES
-═══════════════════════════════ */
-function renderChoices(choices) {
-  const g = document.getElementById('cgrid');
-  g.innerHTML = '';
-  if (!choices.length) {
-    g.innerHTML = '<div class="empty">Scrivi un\'azione personalizzata.</div>';
-    return;
-  }
-  choices.forEach((c,i) => {
-    if (!c || !c.text) return;
-    const risk = String(c.risk||'medio').toLowerCase();
-    const lbl  = risk==='alto' ? '⚠ ALTO' : risk==='basso' ? '◇ BASSO' : '◈ MEDIO';
-    const btn  = document.createElement('button');
-    btn.className = 'cbtn';
-    btn.innerHTML = `<span class="cnum">[${i+1}]</span>
-      <span class="ctxt">${esc(c.text)}<div class="crisk r-${risk}">RISCHIO: ${lbl}</div></span>`;
-    btn.onclick = () => choose(c.text);
+function renderChoices(choices){
+  var g=document.getElementById("cgrid");g.innerHTML="";
+  if(!choices||!choices.length){g.innerHTML="<div class='empty'>Scrivi un azione libera.</div>";return;}
+  choices.forEach(function(c,i){
+    if(!c||!c.text)return;
+    var risk=String(c.risk||"medio").toLowerCase();
+    var lbl=risk==="alto"?"ALTO":risk==="basso"?"BASSO":"MEDIO";
+    var btn=document.createElement("button");btn.className="cbtn";
+    var span1=document.createElement("span");span1.className="cnum";span1.textContent="["+(i+1)+"]";
+    var span2=document.createElement("span");span2.className="ctxt";span2.textContent=c.text;
+    var risk_div=document.createElement("div");risk_div.className="crisk r-"+risk;risk_div.textContent="RISCHIO: "+lbl;
+    span2.appendChild(risk_div);btn.appendChild(span1);btn.appendChild(span2);
+    btn.onclick=(function(txt){return function(){choose(txt);};})(c.text);
     g.appendChild(btn);
   });
 }
 
-/* ═══════════════════════════════
-   ACTIONS
-═══════════════════════════════ */
-function choose(text) {
-  if (busy) return;
-  addLog(`[${G.year}·${G.sem===1?'S1':'S2'}] ${text}`);
-  advRound();
-  conv.push({
-    role:'user',
-    content:
-      `Scelta: "${text}"\n` +
-      `Stato — eta:${G.age}, salute:${G.health}/10, HK$${G.money}, rep:"${G.repLbl}"(${G.rep}), edu:${G.edu}, str:${G.str}, wit:${G.wit}, luck:${G.luck}, crim:${G.crim}\n` +
-      `Inventario: ${G.inv.map(i=>i.name).join(', ')||'vuoto'}\n` +
-      `Skills: ${G.skills.map(s=>s.name+' lv'+s.level).join(', ')||'nessuna'}\n` +
-      `Relazioni: ${Object.entries(G.rel).map(([n,d])=>n+':'+d.status).join(', ')||'nessuna'}\n` +
-      `Flags: ${G.flags.join(', ')||'nessuno'}\n` +
-      `SOLO JSON valido. Nessun apostrofo nelle stringhe.`
-  });
+function choose(text){
+  if(busy)return;
+  if(text.length>300)text=text.slice(0,300);
+  addLog("["+G.year+"."+MESI[(G.round-1)%12]+"] "+text);
+  G.round++;
+  if(G.round%6===0)G.age++;
+  if(G.round%3===0){if(G.sem===1){G.sem=2;}else{G.sem=1;G.year++;}}
+  var inv=G.inv.map(function(i){return i.name;}).join(",")||"vuoto";
+  var sk=G.skills.map(function(x){return x.name+"lv"+x.level;}).join(",")||"nessuna";
+  var inj=G.injuries.map(function(i){return i.label;}).join(",")||"nessuna";
+  var prevC=lastChoices.length?" NON RIPETERE:["+lastChoices.map(function(c){return c.text.slice(0,25);}).join("/")+"].":"";
+  var exSc="money:+300,str:+1";
+  var tl=text.toLowerCase();
+  if(tl.indexOf("lavora")>=0||tl.indexOf("officina")>=0||tl.indexOf("caruso")>=0)exSc="money:+400,str:+1";
+  else if(tl.indexOf("combatt")>=0||tl.indexOf("torneo")>=0)exSc="money:+200,str:+1,health:-1";
+  else if(tl.indexOf("studi")>=0||tl.indexOf("chan")>=0)exSc="edu:+1,wit:+1";
+  else if(tl.indexOf("triadi")>=0||tl.indexOf("fong")>=0||tl.indexOf("14k")>=0)exSc="money:+270,crim:+1,rep:+3";
+  else if(tl.indexOf("arm")>=0||tl.indexOf("pistol")>=0)exSc="money:+300,crim:+1";
+  var msg="STATO(anno "+G.year+" eta "+G.age+"): sal="+G.health+"/10 $="+G.money+" str="+G.str+" wit="+G.wit+" edu="+G.edu+" crim="+G.crim+" rep="+G.repLbl+"("+G.rep+")\n";
+  msg+="INV:"+inv+" SKILL:"+sk+" FERITE:"+inj+"\n";
+  msg+="AZIONE: "+text+"\n";
+  msg+="ROUND=2MESI. REGOLE:1)sc=DELTA(es:"+exSc+") 2)min3campi 3)valuta rischio"+prevC+" 4)3choices NUOVE.\nJSON puro.";
+  conv=[{role:"user",content:msg}];
+  callAI();
+}
+function sendCustom(){var el=document.getElementById("custinp");var t=el.value.trim();if(!t||busy)return;el.value="";choose(t);}
+
+function startGame(){
+  document.getElementById("intro").style.display="none";
+  document.getElementById("game").style.display="block";
+  initMap();initMarket();
+  conv=[{role:"user",content:"Inizia. Mirko 11 anni, gennaio 1969, Kowloon Walled City. Round=2mesi. Prima mattina. 180 parole. 3 choices. sc min 2 campi. JSON puro."}];
   callAI();
 }
 
-function sendCustom() {
-  const el = document.getElementById('custinp');
-  const t  = el.value.trim();
-  if (!t || busy) return;
-  el.value = '';
-  choose(t);
+function caricaSave(s){
+  var g=s.G;
+  G.round=g.round;G.year=g.year;G.sem=g.sem;G.age=g.age;
+  G.health=g.health;G.money=g.money;G.rep=g.rep;G.repLbl=g.repLbl;
+  G.edu=g.edu;G.str=g.str;G.wit=g.wit;G.luck=g.luck;G.crim=g.crim;
+  G.inv=g.inv||[];G.skills=g.skills||[];G.rel=g.rel||{};G.flags=g.flags||[];
+  G.injuries=g.injuries||[];G.territory=g.territory||{};G.news=g.news||[];G.market=g.market||{};
+  G.skillPts=g.skillPts||0;G.unlockedSkills=g.unlockedSkills||[];
+  G.factionRep=g.factionRep||{k14:0,syeon:0,drago:0,polizia:0,civili:10};
+  initMap();initMarket();
+  document.getElementById("intro").style.display="none";
+  document.getElementById("game").style.display="block";
+  var lb=document.getElementById("logbox");lb.innerHTML="";
+  (s.log||[]).forEach(function(t){var d=document.createElement("div");d.className="logline";d.textContent=t;lb.appendChild(d);});
+  renderUI();
+  var sk2=G.skills.map(function(x){return x.name+" lv"+x.level;}).join(", ")||"nessuna";
+  var inv2=G.inv.map(function(i){return i.name;}).join(", ")||"vuoto";
+  conv=[{role:"user",content:"STATO(anno "+G.year+" eta "+G.age+"): sal="+G.health+"/10 $="+G.money+" str="+G.str+" rep="+G.repLbl+"\nINV:"+inv2+"\nSKILL:"+sk2+"\nPartita ripresa. Round=2mesi. 120 parole + 3 choices. sc min 3 campi. JSON puro."}];
+  callAI();
 }
 
-function advRound() {
-  G.round++;
-  if (G.sem===1) { G.sem=2; }
-  else { G.sem=1; G.year++; G.age++; }
-}
-
-/* ═══════════════════════════════
-   RENDER UI
-═══════════════════════════════ */
-function renderUI() {
-  // Timebar
-  document.getElementById('tdisp').textContent = `${G.year} · ${G.sem===1?'Gen-Giu':'Lug-Dic'}`;
-  document.getElementById('adisp').textContent = `${G.age} anni · R${G.round}`;
-
-  // Stats
-  const h = document.getElementById('sh');
-  h.textContent = `${G.health}/10`;
-  h.className   = 'sval ' + (G.health<=3?'danger':G.health>=7?'ok':'');
-  document.getElementById('bh').style.width  = (G.health*10)+'%';
-  document.getElementById('sm').textContent  = '$'+G.money;
-  document.getElementById('sr').textContent  = G.repLbl;
-  document.getElementById('br').style.width  = G.rep+'%';
-  document.getElementById('se').textContent  = G.edu+'/10';
-  document.getElementById('sst').textContent = G.str+'/10';
-  document.getElementById('sw').textContent  = G.wit+'/10';
-  document.getElementById('sl').textContent  = G.luck+'/10';
-  document.getElementById('sc').textContent  = G.crim+'/10';
-
+function renderUI(){
+  var mi=(G.round-1)%12;
+  document.getElementById("tdisp").textContent=G.year+" - "+MESI[mi];
+  document.getElementById("adisp").textContent=G.age+" anni - R"+G.round;
+  var h=document.getElementById("sh");h.textContent=G.health+"/10";h.className="sval "+(G.health<=3?"danger":G.health>=7?"ok":"");
+  document.getElementById("bh").style.width=(G.health*10)+"%";
+  document.getElementById("sm").textContent="$"+G.money;
+  document.getElementById("sr").textContent=G.repLbl;
+  document.getElementById("brp").style.width=G.rep+"%";
+  document.getElementById("se").textContent=G.edu+"/10";
+  document.getElementById("sst").textContent=G.str+"/10";
+  document.getElementById("sw").textContent=G.wit+"/10";
+  document.getElementById("sl").textContent=G.luck+"/10";
+  document.getElementById("sc2").textContent=G.crim+"/10";
+  var tier=getRepTier();var badge=document.getElementById("repbadge");badge.textContent=tier.label.toUpperCase();badge.className="repbadge "+tier.cls;
+  var injDisp=document.getElementById("injury-display");injDisp.textContent=G.injuries.length?G.injuries.map(function(i){return i.label;}).join(" | "):"";
   // Skills
-  const sk = document.getElementById('sklist');
-  sk.innerHTML = G.skills.length
-    ? G.skills.map(s=>`<div class="skitem">
-        <span class="sknm">${esc(s.name)}</span>
-        <span class="sklv">${[1,2,3,4,5].map(n=>`<span class="skd${n<=s.level?' f':''}"></span>`).join('')}</span>
-      </div>`).join('')
-    : '<div class="empty">Nessuna abilita ancora.</div>';
-
-  // Inventory
-  const iv = document.getElementById('invg');
-  iv.innerHTML = G.inv.length
-    ? G.inv.map(i=>`<div class="invitem"><span class="invico">${i.icon}</span><span>${esc(i.name)}</span></div>`).join('')
-    : '<div class="empty">Nessun oggetto.</div>';
-
+  var skEl=document.getElementById("sklist");
+  skEl.innerHTML=G.skills.length?G.skills.map(function(s){
+    var dots=[1,2,3,4,5].map(function(n){var cls=n<=s.level?"skd f":"skd";return "<span class='"+ cls +"'>" +"</span>";}).join("");
+    return "<div class='skitem'><span class='sknm'>"+esc(s.name)+"</span><span class='sklv'>"+dots+"</span></div>";
+  }).join(""):"<div class='empty'>Nessuna abilita.</div>";
+  // Ferite
+  var injEl=document.getElementById("injuries-panel");
+  injEl.innerHTML=G.injuries.length?G.injuries.map(function(i){return "<div class='"+(i.type==="malattia"?"disease-item":"injury-item")+"'>"+esc(i.label)+" ("+i.rounds+"r) "+esc(i.effect)+"</div>";}).join(""):"<div class='empty'>Nessuna ferita.</div>";
+  // Inventario
+  document.getElementById("invg").innerHTML=G.inv.length?G.inv.map(function(i){return "<div class='invitem'><span style='font-size:11px;margin-right:4px'>"+esc(i.icon)+"</span><span>"+esc(i.name)+"</span></div>";}).join(""):"<div class='empty'>Nessun oggetto.</div>";
   // Flags
-  document.getElementById('flaglist').innerHTML = G.flags.length
-    ? G.flags.map(f=>`<span style="color:var(--amber)">▸</span> ${esc(f)}<br>`).join('')
-    : '—';
-
-  // Relations
-  const rl = document.getElementById('rllist');
-  const en = Object.entries(G.rel);
-  rl.innerHTML = en.length
-    ? en.map(([nm,d])=>`<div class="rlitem">
-        <div class="rlhd">
-          <span class="rlnm">${esc(nm)}</span>
-          <span class="rlst ${d.status||'neutro'}">${(d.status||'neutro').toUpperCase()}</span>
-        </div>
-        <div class="rldsc">${esc(d.desc||'')}</div>
-      </div>`).join('')
-    : '<div class="empty">Nessun contatto ancora.</div>';
+  document.getElementById("flaglist").innerHTML=G.flags.length?G.flags.slice(-15).map(function(f){return "<span style='color:var(--amb)'>- </span>"+esc(f)+"<br>";}).join(""):"-";
+  // Relazioni
+  var en=Object.keys(G.rel);
+  document.getElementById("rllist").innerHTML=en.length?en.map(function(nm){
+    var d=G.rel[nm];var sc=String(d.status||"neutro").toLowerCase().replace(/\s+/g,"-");var trust=d.trust!==undefined?d.trust:50;
+    var el=document.createElement("div");el.className="rlitem";el.setAttribute("data-nm",nm);
+    el.innerHTML="<div class='rlhd'><span class='rlnm'>"+esc(nm)+"</span><span class='rlst "+sc+"'>"+esc((d.status||"neutro").toUpperCase())+"</span></div>"+
+      "<div class='rldsc'>"+esc(d.desc||"")+"</div>"+
+      "<div class='rltrust'><div class='rltrust-fill' style='width:"+trust+"%;'></div></div>";
+    el.onclick=function(){talkToNPC(this.getAttribute("data-nm"));};
+    return el.outerHTML;
+  }).join(""):"<div class='empty'>Nessun contatto.</div>";
+  // Mappa
+  var mg=document.getElementById("map-grid");mg.innerHTML="";
+  MAP_ROWS.forEach(function(r){MAP_COLS.forEach(function(c){var z=r+c;var owner=G.territory[z]||"neutral";var div=document.createElement("div");div.className="mc "+owner;div.textContent=z;div.title=z+": "+owner;mg.appendChild(div);});});
+  // News
+  var nl=document.getElementById("news-list");
+  nl.innerHTML=G.news.length?G.news.map(function(n){return "<div class='news-item'><div class='news-date'>"+esc(n.date)+"</div><div class='news-title'>"+esc(n.title)+"</div>"+"</div>"+(n.body?"<div class='news-body'>"+esc(n.body)+"</div>":"");}).join(""):"<div class='empty'>Nessuna notizia.</div>";
+  // Dossier
+  var dl=document.getElementById("dossier-list");dl.innerHTML="";
+  Object.keys(NPC_DATA).forEach(function(nm){
+    var npc=NPC_DATA[nm];var rel=G.rel[nm]||{};var trust=rel.trust||0;var status=rel.status||"sconosciuto";
+    var div=document.createElement("div");div.className="dossier-item";
+    div.innerHTML="<div class='dossier-name'>"+esc(nm)+"</div><div class='dossier-role'>"+esc(npc.role)+"</div>"+
+      "<div class='dossier-body'>"+esc(npc.bio)+"</div>"+
+      "<div style='margin-top:5px;'>"+npc.tags.map(function(t){return "<span class='dossier-tag'>"+t+"</span>";}).join("")+"</div>"+
+      (trust>0?"<div class='rltrust' style='margin-top:6px'><div class='rltrust-fill' style='width:"+trust+"%'></div></div>":"");
+    var btn=document.createElement("button");btn.className="talk-btn";btn.textContent="PARLA CON "+nm.toUpperCase();btn.setAttribute("data-nm",nm);btn.onclick=function(){talkToNPC(this.getAttribute("data-nm"));};
+    div.appendChild(btn);dl.appendChild(div);
+  });
+  // Mercato
+  var mkg=document.getElementById("mkt-grid");mkg.innerHTML="";
+  MARKET_ITEMS.forEach(function(item){
+    var price=getMarketPrice(item);var mod=G.market[item.id]||1.0;var cls=mod>1.3?"alta":mod<0.7?"bassa":"";
+    var div=document.createElement("div");div.className="mkt-item";
+    var nameSpan=document.createElement("span");nameSpan.className="mkt-name";nameSpan.textContent=item.name;
+    var priceDiv=document.createElement("div");priceDiv.style.display="flex";priceDiv.style.alignItems="center";
+    var priceSpan=document.createElement("span");priceSpan.className="mkt-price "+cls;priceSpan.textContent="HK$"+price;
+    var btn=document.createElement("button");btn.className="mkt-btn";btn.textContent=G.money>=price?"COMPRA":"N/A";btn.disabled=G.money<price;
+    if(G.money>=price)btn.onclick=(function(id,name,p){return function(){buyItem(id,name,p);};})(item.id,item.name,price);
+    priceDiv.appendChild(priceSpan);priceDiv.appendChild(btn);div.appendChild(nameSpan);div.appendChild(priceDiv);mkg.appendChild(div);
+  });
+  var sg=document.getElementById("sell-grid");sg.innerHTML="";
+  if(G.inv.length){G.inv.forEach(function(item,idx){var sp=Math.round(30+Math.random()*80);var div=document.createElement("div");div.className="mkt-item";var ns=document.createElement("span");ns.className="mkt-name";ns.textContent=item.name;var pd=document.createElement("div");pd.style.display="flex";pd.style.alignItems="center";var ps=document.createElement("span");ps.className="mkt-price bassa";ps.textContent="HK$"+sp;var b=document.createElement("button");b.className="mkt-btn vendi";b.textContent="VENDI";b.onclick=(function(i,p){return function(){sellItem(i,p);};})(idx,sp);pd.appendChild(ps);pd.appendChild(b);div.appendChild(ns);div.appendChild(pd);sg.appendChild(div);});}else{sg.innerHTML="<div class='empty'>Nessun oggetto vendibile.</div>";}
+  // Missioni
+  var ql=document.getElementById("quest-list");ql.innerHTML="";
+  QUESTS.forEach(function(q){var prog=getQuestProg(q);var done=q.flags_complete.some(function(f){return G.flags.indexOf(f)>=0;});var cls=done?"completata":"attiva";var div=document.createElement("div");div.className="quest-item "+cls;div.innerHTML="<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;'><span class='quest-name'>"+esc(q.name)+"</span><span class='quest-badge "+cls+"'>"+(done?"COMPLETATA":"ATTIVA")+"</span></div><div class='quest-desc'>"+esc(q.desc)+"</div>"+q.steps.map(function(s){var sd=(s.flag&&G.flags.indexOf(s.flag)>=0)||(!s.flag&&s.checkFn&&s.checkFn());return "<div style='font-size:8px;color:"+(sd?"var(--green)":"var(--dim)")+";'>"+(sd?"[X]":"[ ]")+" "+esc(s.text)+"</div>";}).join("")+"<div style='font-size:8px;color:var(--amb);margin:4px 0;'>"+prog.done+"/"+prog.total+" - "+prog.pct+"%</div><div class='quest-prog'><div class='"+(done?"quest-fill green":"quest-fill")+"'  style='width:"+prog.pct+"%'></div></div>";ql.appendChild(div);});
+  // Albero abilita
+  var sp=document.getElementById("skill-pts");if(sp)sp.textContent=(G.skillPts||0)+" pt disponibili";
+  var st=document.getElementById("skill-tree");if(st){st.innerHTML="";SKILL_BRANCHES.forEach(function(branch){var div=document.createElement("div");div.className="skill-branch";div.innerHTML="<div class='skill-br-title' style='color:"+branch.color+"'>"+esc(branch.name)+"</div>";branch.nodes.forEach(function(node){var owned=(G.unlockedSkills||[]).indexOf(node.id)>=0;var reqOk=!node.req||(G.unlockedSkills||[]).indexOf(node.req)>=0;var canBuy=!owned&&reqOk&&(G.skillPts||0)>=node.cost;var nd=document.createElement("div");nd.className="skill-node";nd.innerHTML="<div><div class='skill-node-name' style='color:"+(owned?"var(--green)":reqOk?"var(--text)":"var(--dim)")+"'>"+esc(node.name)+"</div><div class='skill-node-cost'>"+esc(node.desc)+"</div></div>";var btn=document.createElement("button");btn.className=owned?"skill-btn owned":"skill-btn";btn.disabled=owned||!canBuy;btn.textContent=owned?"SBLOCCATA":canBuy?"SBLOCCA ("+node.cost+"pt)":!reqOk?"BLOCCATA":"INSUFF.";if(canBuy)btn.onclick=(function(id,cost){return function(){unlockSkill(id,cost);};})(node.id,node.cost);nd.appendChild(btn);div.appendChild(nd);});st.appendChild(div);});}
+  // Fazioni
+  var fl=document.getElementById("faction-list");if(fl){fl.innerHTML="";FACTIONS.forEach(function(f){var rep=(G.factionRep||{})[f.id]||0;var div=document.createElement("div");div.className="faction-item";div.innerHTML="<div class='faction-hd'><span style='font-size:10px;color:"+f.color+"'>"+esc(f.name)+"</span><span class='faction-rep'>"+rep+"/100</span></div><div class='faction-bar'><div class='faction-fill' style='width:"+rep+"%;background:"+f.color+"'></div></div>";fl.appendChild(div);});}
+  var ft=document.getElementById("faction-territory");if(ft){var counts={owned:0,k14:0,syeon:0,neutral:0,contested:0};Object.keys(G.territory).forEach(function(k){var v=G.territory[k];counts[v]=(counts[v]||0)+1;});ft.textContent="Tuoi: "+counts.owned+" | 14K: "+counts.k14+" | Sun Yee On: "+counts.syeon+" | Neutrali: "+counts.neutral+" | Contestate: "+counts.contested;}
+  // Timeline e meteo
+  renderTimeline();renderWeather();
 }
 
-/* ═══════════════════════════════
-   HELPERS
-═══════════════════════════════ */
-function addLog(t) {
-  const box = document.getElementById('logbox');
-  const d = document.createElement('div');
-  d.className = 'logline';
-  d.textContent = t;
-  box.insertBefore(d, box.firstChild);
+function buyItem(id,name,price){if(G.money<price){alert("Soldi insufficienti.");return;}G.money-=price;G.inv.push({icon:"[MKT]",name:name});addLog("[MERCATO] Acquistato: "+name+" -HK$"+price,false);renderUI();}
+function sellItem(idx,price){var item=G.inv[idx];if(!item)return;G.money+=price;G.inv.splice(idx,1);addLog("[MERCATO] Venduto: "+item.name+" +HK$"+price,true);renderUI();}
+
+var SK="kwl_v3";
+function autoSave(){try{var logEls=document.querySelectorAll(".logline");var log=[];for(var li=0;li<logEls.length;li++)log.push(logEls[li].textContent);;localStorage.setItem(SK,JSON.stringify({G:JSON.parse(JSON.stringify(G)),log:log,savedAt:new Date().toISOString()}));}catch(e){}}
+function openModal(type){if(type==="export"){autoSave();document.getElementById("ta-export").value=localStorage.getItem(SK)||"{}";document.getElementById("modal-export").classList.add("on");}else if(type==="import"){document.getElementById("ta-import").value="";document.getElementById("modal-import").classList.add("on");}else{document.getElementById("modal-"+type).classList.add("on");}}
+function closeModal(type){document.getElementById("modal-"+type).classList.remove("on");}
+function doImport(){var txt=document.getElementById("ta-import").value.trim();if(!txt){alert("Incolla prima il JSON.");return;}try{var parsed=JSON.parse(txt);if(!parsed.G)throw new Error("Manca il campo G");closeModal("import");caricaSave(parsed);}catch(e){alert("Errore: "+e.message);}}
+
+function addLog(t,d){var box=document.getElementById("logbox");var el=document.createElement("div");el.className=d?"logline delta":"logline";el.textContent=t;box.insertBefore(el,box.firstChild);}
+function setLoad(on){document.getElementById("loading").classList.toggle("on",on);document.getElementById("sndbtn").disabled=on;var cbtns=document.querySelectorAll(".cbtn");for(var ci=0;ci<cbtns.length;ci++)cbtns[ci].disabled=on;if(!on)document.getElementById("loadmsg").textContent="LA CITTA DECIDE...";}
+function switchTab(n){var tabs=document.querySelectorAll(".tb");var panels=document.querySelectorAll(".panel");tabs.forEach(function(b,i){b.classList.toggle("on",i===n);});panels.forEach(function(p,i){p.classList.toggle("on",i===n);});}
+function fmtNarr(t){
+  if(!t)return "";
+  var r=esc(t);
+  r=r.replace(/HK\$[\d,.]+/g,function(m){var s=document.createElement("span");s.className="hl";s.textContent=m;return s.outerHTML;});
+  return r;
 }
-
-function setLoad(on) {
-  document.getElementById('loading').classList.toggle('on', on);
-  document.getElementById('sndbtn').disabled = on;
-  document.querySelectorAll('.cbtn').forEach(b => b.disabled = on);
-}
-
-function tab(name) {
-  const names = ['gioco','stats','inv','rel'];
-  document.querySelectorAll('.tb').forEach((b,i)    => b.classList.toggle('on', names[i]===name));
-  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('on', names[i]===name));
-}
-
-function fmtNarr(txt) {
-  if (!txt) return '';
-  return esc(txt)
-    .replace(/HK\$[\d,.]+/g,        m => `<span class="hl">${m}</span>`)
-    .replace(/\b(Benny|Caruso|Fong|Dragon|Mei|Chan|14K|Sun Yee On)\b/g,
-                                     m => `<span class="hl">${m}</span>`)
-    .replace(/\b(polizia|morte|morto|ferito|arrestato|sangue|brucia|bruciato)\b/gi,
-                                     m => `<span class="hlr">${m}</span>`);
-}
-
-function esc(s) {
-  if (s == null) return '';
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-
-/* ═══════════════════════════════
-   API KEY MANAGEMENT
-═══════════════════════════════ */
-const API_KEY_STORAGE = 'kowloon_apikey';
-let API_KEY = '';
-
-function initApiKey() {
-  const stored = localStorage.getItem(API_KEY_STORAGE);
-  if (stored && stored.startsWith('sk-ant-')) {
-    API_KEY = stored;
-    document.getElementById('apimodal').style.display = 'none';
-  } else {
-    document.getElementById('apimodal').style.display = 'flex';
-  }
-}
-
-function confirmApiKey() {
-  const val = document.getElementById('apikey-inp').value.trim();
-  const err = document.getElementById('apikey-err');
-  if (!val.startsWith('sk-ant-') && !val.startsWith('sk-')) {
-    err.style.display = 'block';
-    return;
-  }
-  err.style.display = 'none';
-  API_KEY = val;
-  localStorage.setItem(API_KEY_STORAGE, val);
-  document.getElementById('apimodal').style.display = 'none';
-  checkSave();
-}
-
-function resetApiKey() {
-  localStorage.removeItem(API_KEY_STORAGE);
-  API_KEY = '';
-  document.getElementById('apimodal').style.display = 'flex';
-}
-
-/* ═══════════════════════════════
-   SAVE / LOAD / EXPORT / IMPORT
-═══════════════════════════════ */
-const SAVE_KEY = 'kowloon_save_v1';
-
-// Auto-save to localStorage after every round
-function autoSave() {
-  const snapshot = {
-    G:    JSON.parse(JSON.stringify(G)),
-    conv: JSON.parse(JSON.stringify(conv)),
-    log:  Array.from(document.querySelectorAll('.logline')).map(el => el.textContent),
-    savedAt: new Date().toISOString()
-  };
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(snapshot)); } catch(e) { console.warn('AutoSave failed:', e); }
-}
-
-// Export save as downloadable JSON file
-function exportSave() {
-  autoSave();
-  const snapshot = localStorage.getItem(SAVE_KEY);
-  if (!snapshot) { alert('Nessun salvataggio disponibile.'); return; }
-  const blob = new Blob([snapshot], {type:'application/json'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.download = 'mirko_' + G.year + '_R' + G.round + '.json';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-// Import save from JSON file
-function importSave(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const snapshot = JSON.parse(e.target.result);
-      if (!snapshot.G || !snapshot.conv) throw new Error('File non valido');
-      localStorage.setItem(SAVE_KEY, JSON.stringify(snapshot));
-      alert('Salvataggio importato! Premi CONTINUA PARTITA.');
-      checkSave();
-    } catch(err) {
-      alert('Errore nel file: ' + err.message);
-    }
-  };
-  reader.readAsText(file);
-}
-
-// Load save from localStorage and resume game
-function loadSave() {
-  const raw = localStorage.getItem(SAVE_KEY);
-  if (!raw) { alert('Nessun salvataggio trovato.'); return; }
-  try {
-    const snapshot = JSON.parse(raw);
-    // Restore state
-    Object.assign(G, snapshot.G);
-    conv.length = 0;
-    snapshot.conv.forEach(m => conv.push(m));
-    // Show game
-    document.getElementById('intro').style.display = 'none';
-    document.getElementById('game').style.display  = 'block';
-    // Restore log
-    const logbox = document.getElementById('logbox');
-    logbox.innerHTML = '';
-    (snapshot.log || []).forEach(t => { const d=document.createElement('div'); d.className='logline'; d.textContent=t; logbox.appendChild(d); });
-    // Re-render UI
-    renderUI();
-    // Ask AI to summarise current situation and give new choices
-    conv.push({
-      role:'user',
-      content: 'Partita ripresa da salvataggio. Ricorda la situazione corrente: ' +
-        'eta:' + G.age + ', anno:' + G.year + ', sem:' + G.sem + ', salute:' + G.health + '/10, HK$' + G.money +
-        ', rep:"' + G.repLbl + '"(' + G.rep + '), edu:' + G.edu + ', str:' + G.str + ', wit:' + G.wit + ', luck:' + G.luck + ', crim:' + G.crim +
-        '. Inventario: ' + (G.inv.map(i=>i.name).join(', ')||'vuoto') +
-        '. Skills: ' + (G.skills.map(s=>s.name+' lv'+s.level).join(', ')||'nessuna') +
-        '. Relazioni: ' + (Object.entries(G.rel).map(([n,d])=>n+':'+d.status).join(', ')||'nessuna') +
-        '. Flags: ' + (G.flags.join(', ')||'nessuno') +
-        '. Fai un breve recap della situazione attuale e proponi 3 nuove scelte. SOLO JSON.'
-    });
-    callAI();
-  } catch(err) {
-    alert('Errore nel caricamento: ' + err.message);
-  }
-}
-
-// Check on page load if a save exists
-function checkSave() {
-  const raw = localStorage.getItem(SAVE_KEY);
-  if (!raw) return;
-  try {
-    const snap = JSON.parse(raw);
-    const g = snap.G;
-    if (!g) return;
-    const date = snap.savedAt ? new Date(snap.savedAt).toLocaleDateString('it-IT') : '—';
-    document.getElementById('save-preview').innerHTML =
-      'Anno ' + g.year + ' · ' + (g.sem===1?'Gen-Giu':'Lug-Dic') + ' · Eta ' + g.age + ' · Round ' + g.round + '<br>' +
-      'Salute: ' + g.health + '/10  Denaro: HK$' + g.money + '  Rep: ' + g.repLbl + '<br>' +
-      '<span style="color:var(--dim);font-size:9px;">Salvato il ' + date + '</span>';
-    document.getElementById('save-section').style.display = 'block';
-  } catch(_) {}
-}
-
-// Call checkSave on DOM ready
-document.addEventListener('DOMContentLoaded', function() { initApiKey(); checkSave(); });
+function esc(s){if(!s)return "";var t=String(s),r="";for(var i=0;i<t.length;i++){var c=t.charCodeAt(i);if(c===38)r+="&amp;";else if(c===60)r+="&lt;";else if(c===62)r+="&gt;";else if(c===34)r+="&quot;";else r+=t[i];}return r;}
 
 </script>
 </body>
